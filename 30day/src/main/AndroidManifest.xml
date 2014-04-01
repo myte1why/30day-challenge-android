@@ -18,7 +18,7 @@
         </activity>
 
         <provider
-            android:name="com.nivaldoBondanca.challenges30day.ChallengeContentProvider"
+            android:name=".content.ChallengeContentProvider"
             android:authorities="com.nivaldoBondanca.chalenges30day.content"
             android:enabled="true"
             android:exported="false" >
