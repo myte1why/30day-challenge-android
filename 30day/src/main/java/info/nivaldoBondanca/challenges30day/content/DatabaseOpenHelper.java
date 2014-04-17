@@ -1,4 +1,4 @@
-package com.nivaldoBondanca.challenges30day.content;
+package info.nivaldoBondanca.challenges30day.content;
 
 import android.content.Context;
 import android.database.SQLException;
@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-import static com.nivaldoBondanca.challenges30day.ThirdyDayChallenges.LOG_TAG;
+import static info.nivaldoBondanca.challenges30day.ThirdyDayChallenges.LOG_TAG;
 
 /**
  * Created by Nivaldo
@@ -24,9 +24,10 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 
     private final Context mContext;
 
+
     public DatabaseOpenHelper(Context context) {
-        super(context, DATABASE_NAME, null, DATABASE_VERSION);
-        mContext = context;
+        super(context.getApplicationContext(), DATABASE_NAME, null, DATABASE_VERSION);
+        mContext = context.getApplicationContext();
     }
 
     @Override
@@ -37,33 +38,42 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
             // Get the input
             inputStream = mContext.getAssets().open("databaseDefinition.sql");
         } catch (IOException e) {
-            e.printStackTrace();
-            throw new IllegalStateException("Could not find the databaseDefinition file, so I crashed the application!");
-        }
-
-        try {
-            // Read the file
-            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-            StringBuffer buffer = new StringBuffer();
-            String line;
-            do {
-                line = reader.readLine();
-                buffer.append(line);
-            }
-            while (line != null);
-
-            // File is read, now parse the sql
-            sql = buffer.toString();
-
-        } catch (IOException e) {
-            e.printStackTrace();
+            throw new IllegalStateException("Could not find the databaseDefinition.sql file, so I crashed the application!");
         }
 
         // Execute the SQL to create the database
         db.beginTransaction();
+        Log.i(LOG_TAG, "Creating the database...");
+
         try {
-            db.execSQL(sql);
+            // Read the SQL file with the commands to create the database
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+            StringBuilder buffer = new StringBuilder();
+            String line;
+            do {
+                line = reader.readLine();
+                buffer.append(line);
+
+                if (line != null && line.contains(";")) {
+                    // This ends a SQL command, so run it!
+
+                    // Parse the SQL command
+                    sql = buffer.toString();
+
+                    // Execute the command
+                    db.execSQL(sql);
+
+                    // Clear the buffer
+                    buffer.delete(0, buffer.length());
+                }
+            }
+            while (line != null);
+
             db.setTransactionSuccessful();
+            Log.i(LOG_TAG, "Database created successfully!");
+
+        } catch (IOException e) {
+            Log.e(LOG_TAG, "Error creating the database!", e);
         } catch (SQLException e) {
             Log.e(LOG_TAG, "Error creating the database!", e);
         } finally {

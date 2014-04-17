@@ -1,28 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.nivaldoBondanca.challenges30day" >
+    package="info.nivaldoBondanca.challenges30day">
+
+    <uses-sdk
+        android:minSdkVersion="14"
+        android:targetSdkVersion="19" />
 
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
-        <activity
-            android:name="com.nivaldoBondanca.challenges30day.MainActivity"
-            android:label="@string/app_name" >
+
+        <activity android:name=".ChallengeListsActivity"
+                  android:label="@string/title_activity_challenge_lists" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
         <provider
             android:name=".content.ChallengeContentProvider"
-            android:authorities="com.nivaldoBondanca.chalenges30day.content"
+            android:authorities="info.nivaldoBondanca.challenges30day.content"
             android:enabled="true"
-            android:exported="false" >
-        </provider>
+            android:exported="false" />
+
     </application>
 
 </manifest>

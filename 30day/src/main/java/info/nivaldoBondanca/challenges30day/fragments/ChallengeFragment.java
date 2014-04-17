@@ -1,4 +1,4 @@
-package com.nivaldoBondanca.challenges30day.fragments;
+package info.nivaldoBondanca.challenges30day.fragments;
 
 import android.app.Activity;
 import android.net.Uri;
@@ -8,7 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.nivaldoBondanca.challenges30day.R;
+import info.nivaldoBondanca.challenges30day.R;
 
 /**
  * A simple {@link android.support.v4.app.Fragment} subclass.
@@ -82,7 +82,7 @@ public class ChallengeFragment extends Fragment {
             mListener = (OnFragmentInteractionListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentInteractionListener");
+                    + " must implement OnChallengeListInteractionListener");
         }
     }
 

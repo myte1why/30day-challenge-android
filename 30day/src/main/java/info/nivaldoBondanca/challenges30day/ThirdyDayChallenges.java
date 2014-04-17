@@ -1,4 +1,4 @@
-package com.nivaldoBondanca.challenges30day;
+package info.nivaldoBondanca.challenges30day;
 
 /**
  * Created by Nivaldo

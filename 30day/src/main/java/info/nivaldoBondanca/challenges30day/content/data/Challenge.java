@@ -1,9 +1,9 @@
-package com.nivaldoBondanca.challenges30day.content.data;
+package info.nivaldoBondanca.challenges30day.content.data;
 
 import android.content.ContentUris;
 import android.net.Uri;
 
-import com.nivaldoBondanca.challenges30day.content.ChallengeContentProvider;
+import info.nivaldoBondanca.challenges30day.content.ChallengeContentProvider;
 
 /**
  * Created by Nivaldo
@@ -12,19 +12,18 @@ import com.nivaldoBondanca.challenges30day.content.ChallengeContentProvider;
 public class Challenge {
 
     public static final String TABLE_NAME = "challenge";
-    public interface Datatable {
+    public interface Columns {
         public static final String _ID             = "_id";
         public static final String NAME            = "name";
         public static final String DESCRIPTION     = "description";
         public static final String ALARM           = "alarm";
         public static final String SNOOZE_INTERVAL = "snoozeInterval";
-    }
 
-    enum Status {
-        PENDING,
-        SKIPPED,
-        FAILED,
-        COMPLETED;
+        public static final String FULL_ID              = TABLE_NAME+"."+_ID;
+        public static final String FULL_NAME            = TABLE_NAME+"."+NAME;
+        public static final String FULL_DESCRIPTION     = TABLE_NAME+"."+DESCRIPTION;
+        public static final String FULL_ALARM           = TABLE_NAME+"."+ALARM;
+        public static final String FULL_SNOOZE_INTERVAL = TABLE_NAME+"."+SNOOZE_INTERVAL;
     }
 
     public static final String PATH = "challenge";
@@ -35,5 +34,4 @@ public class Challenge {
     public static Uri getContentUri(long challengeId) {
         return ContentUris.withAppendedId(getContentUri(), challengeId);
     }
-
 }
