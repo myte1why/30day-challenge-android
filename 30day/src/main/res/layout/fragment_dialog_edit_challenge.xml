@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ViewSwitcher  xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/viewAnimator"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/default_activity_horizontalMargin"
+        android:layout_marginEnd="@dimen/default_activity_horizontalMargin"
+        android:layout_marginTop="@dimen/default_activity_verticalMargin"
+        android:layout_marginBottom="@dimen/default_activity_verticalMargin">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/challenge_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:imeOptions="actionNext"
+                android:inputType="textCapWords|textAutoCorrect|textAutoComplete"
+                android:lines="1"
+                android:maxLines="1"
+                android:hint="@string/hint_name"/>
+
+            <EditText
+                android:id="@+id/challenge_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textCapSentences|textAutoCorrect|textAutoComplete"
+                android:minLines="3"
+                android:gravity="top"
+                android:hint="@string/hint_description" />
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:paddingBottom="16dp"
+                android:baselineAligned="false"
+                android:layoutDirection="ltr"
+                tools:ignore="UnusedAttribute">
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingRight="16dp"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/title_challenge_snoozeTime"
+                        android:textSize="14sp"
+                        android:textAllCaps="true"
+                        android:maxLines="1"
+                        android:padding="12dp"/>
+
+                    <TextView
+                        android:id="@+id/challenge_snoozeTime"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/default_text_padding"
+                        style="?android:attr/spinnerStyle"/>
+                </LinearLayout>
+
+                <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/title_challenge_notificationTime"
+                        android:textAllCaps="true"
+                        android:textSize="14sp"
+                        android:maxLines="1"
+                        android:padding="12dp"/>
+
+                    <TextView
+                        android:id="@+id/challenge_notificationTime"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/default_text_padding"
+                        style="?android:attr/spinnerStyle"/>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</ViewSwitcher>

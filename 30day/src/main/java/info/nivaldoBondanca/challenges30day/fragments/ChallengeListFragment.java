@@ -9,14 +9,13 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.ContentLoadingProgressBar;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.TextView;
-
+import android.widget.Toast;
 import info.nivaldoBondanca.challenges30day.ChallengeAdapter;
+import info.nivaldoBondanca.challenges30day.ChallengeInfo;
 import info.nivaldoBondanca.challenges30day.R;
 import info.nivaldoBondanca.challenges30day.content.data.Challenge;
 import info.nivaldoBondanca.challenges30day.content.data.ChallengeAttempt;
@@ -73,6 +72,8 @@ public class ChallengeListFragment extends Fragment
         }
 
         mAdapter = new ChallengeAdapter(getActivity());
+
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -83,9 +84,10 @@ public class ChallengeListFragment extends Fragment
         mListView = (AbsListView) view.findViewById(android.R.id.list);
         mListView.setAdapter(mAdapter);
 
-        // Set OnItemClickListener so we can be notified on item clicks
+        // Set click listeners
         mListView.setOnItemClickListener(this);
         mListView.setOnItemLongClickListener(this);
+        registerForContextMenu(mListView);
 
         return view;
     }
@@ -125,6 +127,66 @@ public class ChallengeListFragment extends Fragment
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        ListType type = ListType.values()[getArguments().getInt(ARG_LIST_TYPE)];
+        switch (type) {
+            case ALL:
+            case ON_GOING:
+                inflater.inflate(R.menu.fragment_challenge_list, menu);
+                break;
+
+            case COMPLETE:
+                break;
+        }
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id;
+        id = item.getItemId();
+        if (id == R.id.action_newContent) {
+            ListType type = ListType.values()[getArguments().getInt(ARG_LIST_TYPE)];
+            switch (type) {
+                case ALL:
+                    newChallenge();
+                    return true;
+
+                case ON_GOING:
+                    newChallengeAttempt();
+                    return true;
+
+                case COMPLETE:
+                    break;
+            }
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        getActivity().getMenuInflater().inflate(R.menu.challenge_options, menu);
+    }
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        ChallengeInfo challenge = (ChallengeInfo) mAdapter.getItem(info.position);
+        switch (item.getItemId()) {
+            case R.id.action_challenge_edit:
+                editChallenge(challenge.challengeID);
+                return true;
+
+            case R.id.action_challenge_delete:
+                getActivity().getContentResolver()
+                                 .delete(ChallengeAttempt.getContentUri(challenge.challengeID, challenge.attemptNumber), null, null);
+                // TODO show undo-able toast
+                Toast.makeText(getActivity(), "Deleted!", Toast.LENGTH_SHORT).show();
+                return true;
+        }
+        return super.onContextItemSelected(item);
     }
 
     private void setListShown(boolean shown) {
@@ -167,8 +229,9 @@ public class ChallengeListFragment extends Fragment
         switch (ListType.values()[id]) {
             case COMPLETE:
                 projection = new String[] {
-                        ChallengeAttempt.Columns.FULL_NUMBER,
-                        ChallengeAttempt.Columns.FULL_CHALLENGE_ID,
+                        ChallengeAttemptDay.Columns.FULL_DAY_NUMBER,
+                        ChallengeAttemptDay.Columns.FULL_ATTEMPT_NUMBER,
+                        ChallengeAttemptDay.Columns.FULL_CHALLENGE_ID,
                         Challenge.Columns.FULL_NAME,
                         "("+ChallengeAttempt.Columns.FULL_FIRST_DAY+" + date('now','+30 days')) AS "+ChallengeAttempt.EVENT_DAY,
                 };
@@ -176,20 +239,20 @@ public class ChallengeListFragment extends Fragment
                 break;
             case ON_GOING:
                 projection = new String[] {
-                        ChallengeAttempt.Columns.FULL_NUMBER,
-                        ChallengeAttempt.Columns.FULL_CHALLENGE_ID,
-                        Challenge.Columns.FULL_NAME,
                         ChallengeAttemptDay.Columns.FULL_DAY_NUMBER,
+                        ChallengeAttemptDay.Columns.FULL_ATTEMPT_NUMBER,
+                        ChallengeAttemptDay.Columns.FULL_CHALLENGE_ID,
+                        Challenge.Columns.FULL_NAME,
                         ChallengeAttemptDay.Columns.FULL_STATUS
                 };
                 selection = ChallengeAttempt.Columns.FULL_STATUS+"="+ChallengeStatus.ON_GOING.ordinal();
                 break;
             case ALL:
                 projection = new String[] {
-                        ChallengeAttempt.Columns.FULL_NUMBER,
-                        ChallengeAttempt.Columns.FULL_CHALLENGE_ID,
-                        Challenge.Columns.FULL_NAME,
                         ChallengeAttemptDay.Columns.FULL_DAY_NUMBER,
+                        ChallengeAttemptDay.Columns.FULL_ATTEMPT_NUMBER,
+                        ChallengeAttemptDay.Columns.FULL_CHALLENGE_ID,
+                        Challenge.Columns.FULL_NAME,
                         ChallengeAttemptDay.Columns.FULL_STATUS
                 };
                 break;
@@ -224,37 +287,65 @@ public class ChallengeListFragment extends Fragment
      * to supply the text it should use.
      */
     public void setEmptyView(ListType type) {
-        int image = 0;
-        int emptyText = 0;
-        int actionText = 0;
+        CharSequence emptyText = null;
+        int emptyImage = 0;
+        CharSequence actionText = null;
         int actionImage = 0;
         View.OnClickListener l = null;
 
-        // TODO fill up the texts and images
+        // TODO fill up the images
         switch (type) {
             case COMPLETE:
+                emptyText = getText(R.string.empty_challengeList_complete);
                 break;
             case ON_GOING:
+                emptyText = getText(R.string.empty_challengeList_onGoing);
+                actionText = getText(R.string.emptyAction_challengeList_onGoing);
+                actionImage = R.drawable.ic_action_new_content;
+                l = new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        newChallengeAttempt();
+                    }
+                };
                 break;
             case ALL:
+                emptyText = getText(R.string.empty_challengeList_all);
+                actionText = getText(R.string.emptyAction_challengeList_all);
+                actionImage = R.drawable.ic_action_new_content;
+                l = new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        newChallenge();
+                    }
+                };
                 break;
         }
 
         View emptyView = getView().findViewById(android.R.id.empty);
-        System.out.println(emptyView);
 
         TextView text = (TextView) emptyView.findViewById(R.id.empty_text);
-        if (emptyText > 0) {
-            text.setText(emptyText);
-        }
-        text.setCompoundDrawablesWithIntrinsicBounds(0, image, 0, 0);
+        text.setText(emptyText);
+        text.setCompoundDrawablesWithIntrinsicBounds(0, emptyImage, 0, 0);
 
         text = (TextView) emptyView.findViewById(R.id.empty_action);
-        if (actionText > 0) {
-            text.setText(actionText);
-        }
-        text.setCompoundDrawablesWithIntrinsicBounds(0, actionImage, 0, 0);
+        text.setText(actionText);
+        text.setCompoundDrawablesWithIntrinsicBounds(actionImage, 0, 0, 0);
         text.setOnClickListener(l);
+        if (actionText == null && actionImage == 0) {
+            text.setVisibility(View.GONE);
+        }
+    }
+
+    private void editChallenge(long challengeId) {
+        EditChallengeDialogFragment.newInstance(challengeId).show(getFragmentManager(), null);
+    }
+    private void newChallenge() {
+        editChallenge(0);
+    }
+
+    private void newChallengeAttempt() {
+        // TODO
     }
 
 

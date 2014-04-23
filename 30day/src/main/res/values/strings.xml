@@ -6,12 +6,33 @@
 
     <!-- Titles -->
     <string name="title_activity_challenge_lists">30-day Challenges</string>
+    <string name="title_challenge_notificationTime">Notification</string>
+    <string name="title_challenge_snoozeTime">Snooze</string>
+    <string name="title_challenge_edit">Edit Challenge</string>
+    <string name="title_challenge_new">New Challenge</string>
     <string name="title_challengeState_all">All</string>
     <string name="title_challengeState_complete">Complete</string>
     <string name="title_challengeState_onGoing">On Going</string>
 
+    <!-- Actions -->
+    <string name="action_cancel">Cancel</string>
+    <string name="action_delete">Delete</string>
+    <string name="action_edit">Edit</string>
+    <string name="action_newContent">New</string>
+    <string name="action_save">Save</string>
+
     <!-- Hint -->
-    <string name="hint_challenge_name">Challenge Name</string>
+    <string name="hint_challenge_name">Challenge name</string>
+    <string name="hint_description">Description</string>
+    <string name="hint_name">Name</string>
+
+    <!-- Empty -->
+    <string name="empty_challengeList_all">Here your challenges will appear</string>
+    <string name="empty_challengeList_complete">All your completed challenges will appear here</string>
+    <string name="empty_challengeList_onGoing">Your current challenges will appear here</string>
+    <string name="emptyAction_challengeList_all">New challenge</string>
+    <string name="emptyAction_challengeList_onGoing">New challenge attempt</string>
+
 
     <!-- Others -->
     <string name="action_example">Example action</string>

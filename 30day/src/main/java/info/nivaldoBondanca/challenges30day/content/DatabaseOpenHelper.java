@@ -49,12 +49,16 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
             // Read the SQL file with the commands to create the database
             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
             StringBuilder buffer = new StringBuilder();
-            String line;
-            do {
-                line = reader.readLine();
+            String line = reader.readLine();
+            while (line != null) {
+                line = line.trim();
+                if (line.startsWith("--")) {
+                    line = reader.readLine();
+                    continue;
+                }
                 buffer.append(line);
 
-                if (line != null && line.contains(";")) {
+                if (line.endsWith(";")) {
                     // This ends a SQL command, so run it!
 
                     // Parse the SQL command
@@ -66,8 +70,9 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
                     // Clear the buffer
                     buffer.delete(0, buffer.length());
                 }
+
+                line = reader.readLine();
             }
-            while (line != null);
 
             db.setTransactionSuccessful();
             Log.i(LOG_TAG, "Database created successfully!");

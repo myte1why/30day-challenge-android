@@ -56,4 +56,3 @@ INSERT INTO challenge VALUES (1, 'Desafio Teste', NULL, 1397578588, 15);
 
     INSERT INTO challengeAttempt VALUES (2, 1, DATETIME('now'), 1);
         INSERT INTO challengeAttemptDay VALUES (1, 1, 2, 1, NULL);
-

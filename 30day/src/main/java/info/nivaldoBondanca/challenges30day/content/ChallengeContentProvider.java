@@ -12,6 +12,7 @@ import info.nivaldoBondanca.challenges30day.content.data.ChallengeAttempt;
 import info.nivaldoBondanca.challenges30day.content.data.ChallengeAttemptDay;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 
 public class ChallengeContentProvider extends ContentProvider {
@@ -116,59 +117,84 @@ public class ChallengeContentProvider extends ContentProvider {
     @Override
     public Uri insert(Uri uri, ContentValues values) {
         // TODO: Implement this to handle requests to insert a new row.
+        long newId = 0;
         switch (mUriMatcher.match(uri)) {
             case URI_CHALLENGE:
-            case URI_CHALLENGE_ITEM:
+                newId = mDatabase.insert(Challenge.TABLE_NAME, null, values);
+                break;
             case URI_ATTEMPT:
-            case URI_ATTEMPT_ITEM:
             case URI_DAY:
-            case URI_DAY_ITEM:
                 break;
 
             default:
                 throw new UnsupportedOperationException("Invalid Uri: "+uri);
         }
 
-        return null;
+        // Update uri
+        uri = ContentUris.withAppendedId(uri, newId);
+        getContext().getContentResolver().notifyChange(uri, null);
+
+        return uri;
     }
 
     @Override
-    public int update(Uri uri, ContentValues values, String selection,
-                      String[] selectionArgs) {
+    public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
         // TODO: Implement this to handle requests to update one or more rows.
+        int result = -1;
         switch (mUriMatcher.match(uri)) {
+            case URI_CHALLENGE_ITEM: {
+                long id = ContentUris.parseId(uri);
+                selection = Challenge.Columns.FULL_ID+"="+id;
+            }
             case URI_CHALLENGE:
-            case URI_CHALLENGE_ITEM:
-            case URI_ATTEMPT:
+                result = mDatabase.update(Challenge.TABLE_NAME, values, selection, selectionArgs);
+                break;
+
             case URI_ATTEMPT_ITEM:
-            case URI_DAY:
+            case URI_ATTEMPT:
             case URI_DAY_ITEM:
+            case URI_DAY:
                 break;
 
             default:
                 throw new UnsupportedOperationException("Invalid Uri: "+uri);
         }
 
-        return -1;
+        getContext().getContentResolver().notifyChange(uri, null);
+
+        return result;
     }
 
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
         // TODO: Implement this to handle requests to delete one or more rows.
+        int result = -1;
+        List<String> pathSegments = uri.getPathSegments();
         switch (mUriMatcher.match(uri)) {
-            case URI_CHALLENGE:
             case URI_CHALLENGE_ITEM:
-            case URI_ATTEMPT:
+                selection = Challenge.Columns.FULL_ID+"="+ContentUris.parseId(uri);
+            case URI_CHALLENGE:
+                result = mDatabase.delete(Challenge.TABLE_NAME, selection, selectionArgs);
+                break;
+
             case URI_ATTEMPT_ITEM:
-            case URI_DAY:
+                selection = ChallengeAttempt.Columns.FULL_NUMBER + "=" + pathSegments.get(3) +
+                        " AND " + ChallengeAttempt.Columns.FULL_CHALLENGE_ID + "=" + pathSegments.get(1);
+            case URI_ATTEMPT:
+                result = mDatabase.delete(ChallengeAttempt.TABLE_NAME, selection, selectionArgs);
+                break;
+
             case URI_DAY_ITEM:
+            case URI_DAY:
                 break;
 
             default:
                 throw new UnsupportedOperationException("Invalid Uri: "+uri);
         }
 
-        return -1;
+        getContext().getContentResolver().notifyChange(uri, null);
+
+        return result;
     }
 
 

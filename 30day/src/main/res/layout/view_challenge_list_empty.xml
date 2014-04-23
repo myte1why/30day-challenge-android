@@ -11,11 +11,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:drawablePadding="12dp"
+        android:padding="@dimen/default_text_padding"
+        android:textColor="#888"
+        android:textSize="22sp"
+        android:textStyle="bold"
         android:gravity="center" />
 
     <Button
         android:id="@+id/empty_action"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:textSize="18sp"/>
 
 </LinearLayout>

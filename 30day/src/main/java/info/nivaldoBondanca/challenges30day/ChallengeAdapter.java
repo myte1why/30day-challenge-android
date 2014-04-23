@@ -3,14 +3,14 @@ package info.nivaldoBondanca.challenges30day;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
-import android.provider.BaseColumns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
-
 import info.nivaldoBondanca.challenges30day.content.data.Challenge;
+import info.nivaldoBondanca.challenges30day.content.data.ChallengeAttemptDay;
+
 
 /**
  * Created by Nivaldo
@@ -22,30 +22,40 @@ public class ChallengeAdapter extends BaseAdapter {
     private Cursor         mCursor;
     private LayoutInflater mLayoutInflater;
 
-    private int mIndexID;
-    private int mChallengeName;
+    private int mIndexChallengeID;
+    private int mIndexAttemptNumber;
+    private int mIndexDayNumber;
+    private int mIndexChallengeName;
 
-    public ChallengeAdapter(Context context) {
+    public ChallengeAdapter(Context context)
+    {
         mLayoutInflater = LayoutInflater.from(context);
         mContext = context;
     }
 
 
     @Override
-    public int getCount() {
+    public int getCount()
+    {
         return mCursor == null ? 0 : mCursor.getCount();
     }
 
     @Override
-    public Object getItem(int position) {
+    public Object getItem(int position)
+    {
         mCursor.moveToPosition(position);
-        return mCursor;
+        return new ChallengeInfo(
+                mCursor.getLong(mIndexChallengeID),
+                mCursor.getLong(mIndexAttemptNumber),
+                mCursor.getLong(mIndexDayNumber)
+        );
     }
 
     @Override
-    public long getItemId(int position) {
+    public long getItemId(int position)
+    {
         mCursor.moveToPosition(position);
-        return mCursor.getLong(mIndexID);
+        return mCursor.getLong(mIndexDayNumber);
     }
 
     @Override
@@ -57,10 +67,12 @@ public class ChallengeAdapter extends BaseAdapter {
             convertView = mLayoutInflater.inflate(R.layout.view_challenge_list_item, parent, false);
         }
 
-        Cursor c = (Cursor) getItem(position);
+        // Move the cursor
+        Cursor c = mCursor;
+        c.moveToPosition(position);
 
         // TODO bind the view to the data
-        ((TextView) convertView.findViewById(R.id.challenge_name)).setText(c.getString(mChallengeName));
+        ((TextView) convertView.findViewById(R.id.challenge_name)).setText(c.getString(mIndexChallengeName));
         ((TextView) convertView.findViewById(R.id.challenge_x)).setText(DatabaseUtils.dumpCurrentRowToString(c));
 
         return convertView;
@@ -89,8 +101,10 @@ public class ChallengeAdapter extends BaseAdapter {
 
         // Update indexes
         if (mCursor != null) {
-            mIndexID = mCursor.getColumnIndex(BaseColumns._ID);
-            mChallengeName = mCursor.getColumnIndex(Challenge.Columns.NAME);
+            mIndexChallengeID = mCursor.getColumnIndex(ChallengeAttemptDay.Columns.CHALLENGE_ID);
+            mIndexAttemptNumber = mCursor.getColumnIndex(ChallengeAttemptDay.Columns.ATTEMPT_NUMBER);
+            mIndexDayNumber = mCursor.getColumnIndex(ChallengeAttemptDay.Columns.DAY_NUMBER);
+            mIndexChallengeName = mCursor.getColumnIndex(Challenge.Columns.NAME);
         }
 
         notifyDataSetChanged();
