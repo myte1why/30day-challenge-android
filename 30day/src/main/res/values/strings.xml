@@ -18,9 +18,9 @@
 
     <!-- Actions -->
     <string name="action_cancel">Cancel</string>
+    <string name="action_challenge_new">New Challenge</string>
     <string name="action_delete">Delete</string>
     <string name="action_edit">Edit</string>
-    <string name="action_newContent">New</string>
     <string name="action_save">Save</string>
 
     <!-- Hint -->

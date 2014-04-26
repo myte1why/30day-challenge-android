@@ -115,6 +115,12 @@ public class ChallengeListsActivity extends ActionBarActivity
 
 
     @Override
+    public void setTab(int position) {
+        if (mViewPager != null) {
+            mViewPager.setCurrentItem(position);
+        }
+    }
+    @Override
     public void onChallengeClick(AbsListView listView, int position, long id) {
         // TODO open the challenge info
     }

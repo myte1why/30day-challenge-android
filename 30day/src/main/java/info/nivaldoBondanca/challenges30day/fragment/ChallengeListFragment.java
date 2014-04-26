@@ -145,22 +145,10 @@ public class ChallengeListFragment extends Fragment
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id;
-        id = item.getItemId();
+        int id = item.getItemId();
         if (id == R.id.action_newContent) {
-            ListType type = ListType.values()[getArguments().getInt(ARG_LIST_TYPE)];
-            switch (type) {
-                case ALL:
-                    newChallenge();
-                    return true;
-
-                case ON_GOING:
-                    newChallengeAttempt();
-                    return true;
-
-                case COMPLETE:
-                    break;
-            }
+            newChallenge();
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -180,9 +168,9 @@ public class ChallengeListFragment extends Fragment
                 return true;
 
             case R.id.action_challenge_delete:
+                // TODO show undo-able toast or confirmation dialog
                 getActivity().getContentResolver()
-                                 .delete(ChallengeAttempt.getContentUri(challenge.challengeID, challenge.attemptNumber), null, null);
-                // TODO show undo-able toast
+                                 .delete(Challenge.getContentUri(challenge.challengeID), null, null);
                 Toast.makeText(getActivity(), "Deleted!", Toast.LENGTH_SHORT).show();
                 return true;
         }
@@ -250,7 +238,7 @@ public class ChallengeListFragment extends Fragment
             case ALL:
                 projection = new String[] {
                         Challenge.Columns.FULL_ID+" AS "+ChallengeAttemptDay.Columns.DAY_NUMBER,
-                        ChallengeAttemptDay.Columns.FULL_ATTEMPT_NUMBER,
+                        Challenge.Columns.FULL_ID+" AS "+ChallengeAttemptDay.Columns.ATTEMPT_NUMBER,
                         Challenge.Columns.FULL_ID+" AS "+ChallengeAttemptDay.Columns.CHALLENGE_ID,
                         Challenge.Columns.FULL_NAME,
                         ChallengeAttemptDay.Columns.FULL_STATUS
@@ -305,7 +293,7 @@ public class ChallengeListFragment extends Fragment
                 l = new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        newChallengeAttempt();
+                        mListener.setTab(ListType.ALL.ordinal());
                     }
                 };
                 break;
@@ -344,7 +332,7 @@ public class ChallengeListFragment extends Fragment
         editChallenge(0);
     }
 
-    private void newChallengeAttempt() {
+    private void newChallengeAttempt(long challengeId) {
         // TODO
     }
 
@@ -360,6 +348,7 @@ public class ChallengeListFragment extends Fragment
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnChallengeListInteractionListener {
+        public void setTab(int position);
         public void onChallengeClick(AbsListView listView, int position, long id);
         public boolean onChallengeLongClick(AbsListView listView, int position, long id);
     }
