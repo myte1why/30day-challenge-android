@@ -155,11 +155,13 @@ public class ChallengeListFragment extends Fragment
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        super.onCreateContextMenu(menu, v, menuInfo);
         getActivity().getMenuInflater().inflate(R.menu.challenge_options, menu);
     }
     @Override
     public boolean onContextItemSelected(MenuItem item) {
+        if(getUserVisibleHint() == false) {
+            return false;
+        }
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         ChallengeInfo challenge = (ChallengeInfo) mAdapter.getItem(info.position);
         switch (item.getItemId()) {
