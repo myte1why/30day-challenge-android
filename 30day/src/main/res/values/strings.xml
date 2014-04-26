@@ -5,7 +5,8 @@
     <string name="app_name">30-day Challenges Manager</string>
 
     <!-- Titles -->
-    <string name="title_activity_challenge_lists">30-day Challenges</string>
+    <string name="title_activity_challenge_lists">Challenges</string>
+    <string name="title_activity_settings">Preferences</string>
     <string name="title_challenge_notificationTime">Notification</string>
     <string name="title_challenge_snoozeTime">Snooze</string>
     <string name="title_challenge_edit">Edit Challenge</string>
@@ -13,6 +14,7 @@
     <string name="title_challengeState_all">All</string>
     <string name="title_challengeState_complete">Complete</string>
     <string name="title_challengeState_onGoing">On Going</string>
+    <string name="title_reminder">Reminder</string>
 
     <!-- Actions -->
     <string name="action_cancel">Cancel</string>
@@ -32,6 +34,13 @@
     <string name="empty_challengeList_onGoing">Your current challenges will appear here</string>
     <string name="emptyAction_challengeList_all">New challenge</string>
     <string name="emptyAction_challengeList_onGoing">New challenge attempt</string>
+
+    <!-- Format -->
+    <string name="format_time_hourMinute">%1$d:%2$02d h</string>
+    <string name="format_time_minute">%d min</string>
+
+    <!-- Errors -->
+    <string name="error_dateTimeFormat">Error on date/time format</string>
 
 
     <!-- Others -->

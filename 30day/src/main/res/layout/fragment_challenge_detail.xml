@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="info.nivaldoBondanca.challenges30day.fragments.ChallengeFragment">
+    tools:context="info.nivaldoBondanca.challenges30day.fragment.ChallengeFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <TextView

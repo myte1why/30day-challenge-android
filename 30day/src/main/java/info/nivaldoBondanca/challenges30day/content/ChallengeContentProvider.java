@@ -66,8 +66,7 @@ public class ChallengeContentProvider extends ContentProvider {
     }
 
     @Override
-    public Cursor query(Uri uri, String[] projection, String selection,
-                        String[] selectionArgs, String sortOrder) {
+    public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         // TODO: Implement this to handle query requests from clients.
         Cursor cursor = null;
 
@@ -91,7 +90,6 @@ public class ChallengeContentProvider extends ContentProvider {
                             " ON "+ChallengeAttemptDay.Columns.FULL_CHALLENGE_ID+"="+Challenge.Columns.FULL_ID+" AND "+ChallengeAttempt.Columns.FULL_NUMBER+"="+ChallengeAttemptDay.Columns.FULL_ATTEMPT_NUMBER+
                         " WHERE %s"+
                         " GROUP BY "+ChallengeAttempt.Columns.FULL_CHALLENGE_ID+", "+ChallengeAttempt.Columns.FULL_NUMBER+
-//                        " HAVING "+ChallengeAttempt.Columns.FULL_CHALLENGE_ID+" NOT NULL AND "+ChallengeAttempt.Columns.FULL_NUMBER+" NOT NULL "+
                         " ORDER BY "+ChallengeAttempt.Columns.FULL_FIRST_DAY+" DESC, "+ChallengeAttemptDay.Columns.FULL_DAY_NUMBER+" DESC",
                         getProjectionString(projection), selection);
 

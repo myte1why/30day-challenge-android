@@ -1,4 +1,4 @@
-package info.nivaldoBondanca.challenges30day.fragments;
+package info.nivaldoBondanca.challenges30day.fragment;
 
 import android.app.Activity;
 import android.database.Cursor;

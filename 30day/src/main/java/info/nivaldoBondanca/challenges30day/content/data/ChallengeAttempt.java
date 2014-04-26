@@ -20,7 +20,6 @@ public class ChallengeAttempt {
         public static final String FULL_CHALLENGE_ID = TABLE_NAME+"."+CHALLENGE_ID;
         public static final String FULL_FIRST_DAY    = TABLE_NAME+"."+FIRST_DAY;
         public static final String FULL_STATUS       = TABLE_NAME+"."+STATUS;
-
     }
     /**
      *  Support variable to serve as a label to resulting query in the column

@@ -1,4 +1,4 @@
-package info.nivaldoBondanca.challenges30day;
+package info.nivaldoBondanca.challenges30day.activity;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,7 +11,8 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AbsListView;
-import info.nivaldoBondanca.challenges30day.fragments.ChallengeListFragment;
+import info.nivaldoBondanca.challenges30day.R;
+import info.nivaldoBondanca.challenges30day.fragment.ChallengeListFragment;
 
 import java.util.Locale;
 

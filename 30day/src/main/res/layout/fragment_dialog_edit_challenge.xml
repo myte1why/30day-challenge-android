@@ -42,6 +42,16 @@
                 android:gravity="top"
                 android:hint="@string/hint_description" />
 
+            <CheckBox
+                android:id="@+id/challenge_notification"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="22dp"
+                android:layout_marginEnd="22dp"
+                android:checked="true"
+                android:padding="@dimen/default_text_padding"
+                android:text="@string/title_reminder"/>
+
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"

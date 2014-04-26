@@ -17,12 +17,14 @@ public class Challenge {
         public static final String NAME            = "name";
         public static final String DESCRIPTION     = "description";
         public static final String ALARM           = "alarm";
+        public static final String ALARM_TIME      = "alarmTime";
         public static final String SNOOZE_INTERVAL = "snoozeInterval";
 
         public static final String FULL_ID              = TABLE_NAME+"."+_ID;
         public static final String FULL_NAME            = TABLE_NAME+"."+NAME;
         public static final String FULL_DESCRIPTION     = TABLE_NAME+"."+DESCRIPTION;
         public static final String FULL_ALARM           = TABLE_NAME+"."+ALARM;
+        public static final String FULL_ALARM_TIME      = TABLE_NAME+"."+ALARM_TIME;
         public static final String FULL_SNOOZE_INTERVAL = TABLE_NAME+"."+SNOOZE_INTERVAL;
     }
 

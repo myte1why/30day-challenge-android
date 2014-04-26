@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="info.nivaldoBondanca.challenges30day.fragments.ChallengeListFragment">
+    tools:context="info.nivaldoBondanca.challenges30day.fragment.ChallengeListFragment">
 
     <android.support.v4.widget.ContentLoadingProgressBar
         style="@android:style/Widget.Holo.Light.ProgressBar.Large"
