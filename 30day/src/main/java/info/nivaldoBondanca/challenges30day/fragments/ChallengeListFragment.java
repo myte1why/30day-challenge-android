@@ -249,9 +249,9 @@ public class ChallengeListFragment extends Fragment
                 break;
             case ALL:
                 projection = new String[] {
-                        ChallengeAttemptDay.Columns.FULL_DAY_NUMBER,
+                        Challenge.Columns.FULL_ID+" AS "+ChallengeAttemptDay.Columns.DAY_NUMBER,
                         ChallengeAttemptDay.Columns.FULL_ATTEMPT_NUMBER,
-                        ChallengeAttemptDay.Columns.FULL_CHALLENGE_ID,
+                        Challenge.Columns.FULL_ID+" AS "+ChallengeAttemptDay.Columns.CHALLENGE_ID,
                         Challenge.Columns.FULL_NAME,
                         ChallengeAttemptDay.Columns.FULL_STATUS
                 };

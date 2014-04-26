@@ -2,7 +2,7 @@ apply plugin: 'android'
 
 android {
     compileSdkVersion 19
-    buildToolsVersion "19.0.3"
+    buildToolsVersion '19.0.3'
 
     defaultConfig {
         minSdkVersion 14
@@ -12,8 +12,8 @@ android {
     }
     buildTypes {
         debug {
-            packageNameSuffix ".debug"
-            versionNameSuffix "-debug"
+            packageNameSuffix '.debug'
+            versionNameSuffix '-debug'
         }
         release {
             runProguard false
@@ -26,4 +26,10 @@ dependencies {
     compile 'com.android.support:appcompat-v7:19.+'
     compile 'com.android.support:support-v4:19.+'
     compile fileTree(dir: 'libs', include: ['*.jar'])
+}
+
+buildscript {
+    dependencies {
+        classpath ''
+    }
 }

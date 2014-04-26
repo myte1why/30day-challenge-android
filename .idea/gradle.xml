@@ -7,8 +7,8 @@
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="modules">
           <set>
-            <option value="C:\Users\Nivaldo\Dropbox\Programs\Playground\30day" />
-            <option value="C:\Users\Nivaldo\Dropbox\Programs\Playground\30day\30day" />
+            <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/30day" />
           </set>
         </option>
       </GradleProjectSettings>
