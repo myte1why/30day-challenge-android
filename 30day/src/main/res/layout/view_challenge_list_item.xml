@@ -2,33 +2,65 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginStart="16dp"
-    android:layout_marginEnd="16dp"
-    android:layout_marginTop="8dp"
-    android:layout_marginBottom="8dp"
-    android:background="#40ff">
+    android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/challenge_name"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/default_text_padding"
-        android:ellipsize="end"
-        android:scrollHorizontally="true"
-        android:maxLines="1"
-        android:textSize="26sp"
-        android:textStyle="bold"
-        android:fontFamily="sans-serif-light"
-        android:hint="@string/hint_challenge_name" />
+        android:orientation="vertical"
+        android:background="@drawable/card">
 
-    <TextView
-        android:id="@+id/challenge_x"
+        <TextView
+            android:id="@+id/challenge_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/default_text_padding"
+            android:ellipsize="end"
+            android:scrollHorizontally="true"
+            android:maxLines="1"
+            android:textSize="26sp"
+            android:textStyle="bold"
+            android:fontFamily="sans-serif-light"
+            android:hint="@string/hint_challenge_name"/>
+
+        <ViewAnimator
+            android:id="@+id/challenge_dynamicView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="12dp"
+            android:layout_marginBottom="10dp"
+            android:measureAllChildren="false">
+
+            <Button
+                android:id="@+id/challenge_newAttempt"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:text="@string/action_challengeAttempt_new"
+                android:drawableStart="@drawable/ic_action_new_content"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:duplicateParentState="false"/>
+
+            <View
+                android:layout_height="48dp"
+                android:layout_width="match_parent"
+                android:background="#0aa"/>
+
+            <TextView
+                android:id="@+id/challenge_completeText"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:text="@string/message_challenge_completed"
+                android:textSize="18sp"
+                android:textStyle="italic"/>
+
+        </ViewAnimator>
+    </LinearLayout>
+
+    <View
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#80d3"
-        android:layout_marginStart="12dp"
-        android:layout_marginEnd="12dp"
-        android:layout_marginBottom="10dp" />
+        android:layout_height="@dimen/card_shadow_height"
+        android:background="@drawable/card_shadow"/>
 
 </LinearLayout>

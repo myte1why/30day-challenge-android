@@ -5,4 +5,13 @@
 
     <!-- Default text padding, per the Android Design guidelines. -->
     <dimen name="default_text_padding">16dp</dimen>
+
+    <!-- Card layout values-->
+    <dimen name="card_background_radius">2dp</dimen>
+    <dimen name="card_shadow_height">3dp</dimen>
+
+    <!-- Challenge list -->
+    <dimen name="challengeList_itemSpacing">16dp</dimen>
+    <dimen name="challengeList_padding">16dp</dimen>
+
 </resources>

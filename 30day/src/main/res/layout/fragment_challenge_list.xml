@@ -15,7 +15,12 @@
     <ListView
         android:id="@android:id/list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:scrollbarStyle="outsideOverlay"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="@dimen/challengeList_itemSpacing"
+        android:padding="@dimen/challengeList_padding"/>
 
     <include
         android:id="@android:id/empty"

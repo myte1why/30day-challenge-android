@@ -71,7 +71,7 @@ public class ChallengeListFragment extends Fragment
             throw new IllegalStateException("A list type MUST be specified");
         }
 
-        mAdapter = new ChallengeAdapter(getActivity());
+        mAdapter = new ChallengeAdapter(getActivity(), ListType.values()[getArguments().getInt(ARG_LIST_TYPE)]);
 
         setHasOptionsMenu(true);
     }
@@ -136,10 +136,8 @@ public class ChallengeListFragment extends Fragment
         switch (type) {
             case ALL:
             case ON_GOING:
-                inflater.inflate(R.menu.fragment_challenge_list, menu);
-                break;
-
             case COMPLETE:
+                inflater.inflate(R.menu.fragment_challenge_list, menu);
                 break;
         }
     }
@@ -159,7 +157,7 @@ public class ChallengeListFragment extends Fragment
     }
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        if(getUserVisibleHint() == false) {
+        if(!getUserVisibleHint()) {
             return false;
         }
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
@@ -198,12 +196,7 @@ public class ChallengeListFragment extends Fragment
     }
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-        if (null != mListener) {
-            // Notify the active callbacks interface (the activity, if the
-            // fragment is attached to one) that an item has been selected.
-            return mListener.onChallengeLongClick(mListView, position, id);
-        }
-        return false;
+        return null != mListener && mListener.onChallengeLongClick(mListView, position, id);
     }
 
 
@@ -223,7 +216,8 @@ public class ChallengeListFragment extends Fragment
                         ChallengeAttemptDay.Columns.FULL_ATTEMPT_NUMBER,
                         ChallengeAttemptDay.Columns.FULL_CHALLENGE_ID,
                         Challenge.Columns.FULL_NAME,
-                        "("+ChallengeAttempt.Columns.FULL_FIRST_DAY+" + date('now','+30 days')) AS "+ChallengeAttempt.EVENT_DAY,
+//                        "("+ChallengeAttempt.Columns.FULL_FIRST_DAY+" + date('now','+30 days')) AS "+ChallengeAttempt.EVENT_DAY
+                        ChallengeAttempt.Columns.FULL_FIRST_DAY+" AS "+ChallengeAttempt.EVENT_DAY
                 };
                 selection = ChallengeAttempt.Columns.FULL_STATUS+"="+ChallengeStatus.COMPLETED.ordinal();
                 break;

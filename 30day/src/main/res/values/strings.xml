@@ -19,9 +19,13 @@
     <!-- Actions -->
     <string name="action_cancel">Cancel</string>
     <string name="action_challenge_new">New Challenge</string>
+    <string name="action_challengeAttempt_new">New Challenge Attempt</string>
     <string name="action_delete">Delete</string>
     <string name="action_edit">Edit</string>
     <string name="action_save">Save</string>
+
+    <!-- Messages -->
+    <string name="message_challenge_completed">Completed on %s</string>
 
     <!-- Hint -->
     <string name="hint_challenge_name">Challenge name</string>
