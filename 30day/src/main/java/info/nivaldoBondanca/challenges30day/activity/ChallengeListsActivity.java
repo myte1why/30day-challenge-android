@@ -123,6 +123,7 @@ public class ChallengeListsActivity extends ActionBarActivity
     @Override
     public void onChallengeClick(AbsListView listView, int position, long id) {
         // TODO open the challenge info
+        startActivity(ChallengeDetailActivity.newInstance(this, id));
     }
     @Override
     public boolean onChallengeLongClick(AbsListView listView, int position, long id) {

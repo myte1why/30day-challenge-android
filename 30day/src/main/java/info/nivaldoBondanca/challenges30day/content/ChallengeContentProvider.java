@@ -74,6 +74,7 @@ public class ChallengeContentProvider extends ContentProvider {
         if (selection == null) {
             selection = "1";
         }
+        List<String> pathSegments = uri.getPathSegments();
 
         switch (mUriMatcher.match(uri)) {
             case URI_CHALLENGE_ITEM: {
@@ -96,8 +97,26 @@ public class ChallengeContentProvider extends ContentProvider {
                 cursor = mDatabase.rawQuery(query, selectionArgs);
                 break;
             }
-            case URI_ATTEMPT_ITEM:
-            case URI_ATTEMPT:
+
+            case URI_ATTEMPT_ITEM: {
+                long id = ContentUris.parseId(uri);
+                selection = ChallengeAttempt.Columns.FULL_NUMBER+"="+id;
+            }
+            case URI_ATTEMPT: {
+                selection += " AND "+ChallengeAttempt.Columns.FULL_CHALLENGE_ID+"="+pathSegments.get(1);
+                final String query = String.format(Locale.ENGLISH,
+                        "SELECT %s" +
+                        " FROM "+ChallengeAttempt.TABLE_NAME+
+                            " LEFT JOIN "+ChallengeAttemptDay.TABLE_NAME+
+                            " ON "+ChallengeAttemptDay.Columns.FULL_CHALLENGE_ID+"="+ChallengeAttempt.Columns.FULL_CHALLENGE_ID+" AND "+ChallengeAttempt.Columns.FULL_NUMBER+"="+ChallengeAttemptDay.Columns.FULL_ATTEMPT_NUMBER+
+                        " WHERE %s"+
+                        " GROUP BY "+ChallengeAttempt.Columns.FULL_NUMBER+
+                        " ORDER BY "+ChallengeAttempt.Columns.FULL_FIRST_DAY+" DESC, "+ChallengeAttemptDay.Columns.FULL_DAY_NUMBER+" DESC",
+                        getProjectionString(projection), selection);
+
+                cursor = mDatabase.rawQuery(query, selectionArgs);
+                break;
+            }
             case URI_DAY_ITEM:
             case URI_DAY:
                 break;

@@ -1,4 +1,4 @@
-package info.nivaldoBondanca.challenges30day;
+package info.nivaldoBondanca.challenges30day.content.adapters;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -10,6 +10,8 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewAnimator;
+import info.nivaldoBondanca.challenges30day.content.adapters.item.ChallengeInfo;
+import info.nivaldoBondanca.challenges30day.R;
 import info.nivaldoBondanca.challenges30day.content.data.Challenge;
 import info.nivaldoBondanca.challenges30day.content.data.ChallengeAttempt;
 import info.nivaldoBondanca.challenges30day.content.data.ChallengeAttemptDay;
@@ -73,7 +75,7 @@ public class ChallengeAdapter extends BaseAdapter {
     @Override
     public long getItemId(int position) {
         mCursor.moveToPosition(position);
-        return mCursor.getLong(mIndexDayNumber);
+        return mCursor.getLong(mIndexChallengeID);
     }
 
     @Override

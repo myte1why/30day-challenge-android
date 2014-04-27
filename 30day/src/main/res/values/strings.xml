@@ -5,6 +5,7 @@
     <string name="app_name">30-day Challenges Manager</string>
 
     <!-- Titles -->
+    <string name="title_activity_challenge_detail">Challenge</string>
     <string name="title_activity_challenge_lists">Challenges</string>
     <string name="title_activity_settings">Preferences</string>
     <string name="title_challenge_notificationTime">Notification</string>
@@ -45,7 +46,6 @@
 
     <!-- Errors -->
     <string name="error_dateTimeFormat">Error on date/time format</string>
-
 
     <!-- Others -->
     <string name="action_example">Example action</string>

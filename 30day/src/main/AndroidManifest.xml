@@ -30,6 +30,14 @@
             android:name=".activity.SettingsActivity"
             android:label="@string/title_activity_settings" >
         </activity>
+        <activity
+            android:name=".activity.ChallengeDetailActivity"
+            android:label="@string/title_activity_challenge_detail"
+            android:parentActivityName=".activity.ChallengeListsActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ChallengeListsActivity" />
+        </activity>
     </application>
 
 </manifest>

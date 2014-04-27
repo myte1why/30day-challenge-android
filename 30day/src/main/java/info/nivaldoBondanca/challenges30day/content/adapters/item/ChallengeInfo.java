@@ -1,4 +1,4 @@
-package info.nivaldoBondanca.challenges30day;
+package info.nivaldoBondanca.challenges30day.content.adapters.item;
 
 /**
  * Created by Nivaldo

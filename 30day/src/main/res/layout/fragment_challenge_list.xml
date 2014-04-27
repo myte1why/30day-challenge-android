@@ -24,7 +24,7 @@
 
     <include
         android:id="@android:id/empty"
-        layout="@layout/view_challenge_list_empty"
+        layout="@layout/view_list_empty"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center" />

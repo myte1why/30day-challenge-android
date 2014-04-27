@@ -14,8 +14,8 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.TextView;
 import android.widget.Toast;
-import info.nivaldoBondanca.challenges30day.ChallengeAdapter;
-import info.nivaldoBondanca.challenges30day.ChallengeInfo;
+import info.nivaldoBondanca.challenges30day.content.adapters.ChallengeAdapter;
+import info.nivaldoBondanca.challenges30day.content.adapters.item.ChallengeInfo;
 import info.nivaldoBondanca.challenges30day.R;
 import info.nivaldoBondanca.challenges30day.content.data.Challenge;
 import info.nivaldoBondanca.challenges30day.content.data.ChallengeAttempt;
@@ -209,6 +209,7 @@ public class ChallengeListFragment extends Fragment
         String[] projection = null;
         String selection = null;
 
+        // TODO review the necessity of ChallengeAttemptDay.Columns.FULL_DAY_NUMBER
         switch (ListType.values()[id]) {
             case COMPLETE:
                 projection = new String[] {
@@ -216,8 +217,7 @@ public class ChallengeListFragment extends Fragment
                         ChallengeAttemptDay.Columns.FULL_ATTEMPT_NUMBER,
                         ChallengeAttemptDay.Columns.FULL_CHALLENGE_ID,
                         Challenge.Columns.FULL_NAME,
-//                        "("+ChallengeAttempt.Columns.FULL_FIRST_DAY+" + date('now','+30 days')) AS "+ChallengeAttempt.EVENT_DAY
-                        ChallengeAttempt.Columns.FULL_FIRST_DAY+" AS "+ChallengeAttempt.EVENT_DAY
+                        "date("+ChallengeAttempt.Columns.FULL_FIRST_DAY+",'+30 days') AS "+ChallengeAttempt.EVENT_DAY,
                 };
                 selection = ChallengeAttempt.Columns.FULL_STATUS+"="+ChallengeStatus.COMPLETED.ordinal();
                 break;
@@ -234,8 +234,8 @@ public class ChallengeListFragment extends Fragment
             case ALL:
                 projection = new String[] {
                         Challenge.Columns.FULL_ID+" AS "+ChallengeAttemptDay.Columns.DAY_NUMBER,
-                        Challenge.Columns.FULL_ID+" AS "+ChallengeAttemptDay.Columns.ATTEMPT_NUMBER,
-                        Challenge.Columns.FULL_ID+" AS "+ChallengeAttemptDay.Columns.CHALLENGE_ID,
+                        ChallengeAttemptDay.Columns.FULL_ATTEMPT_NUMBER,
+                        ChallengeAttemptDay.Columns.FULL_CHALLENGE_ID,
                         Challenge.Columns.FULL_NAME,
                         ChallengeAttemptDay.Columns.FULL_STATUS
                 };
@@ -326,10 +326,6 @@ public class ChallengeListFragment extends Fragment
     }
     private void newChallenge() {
         editChallenge(0);
-    }
-
-    private void newChallengeAttempt(long challengeId) {
-        // TODO
     }
 
 
