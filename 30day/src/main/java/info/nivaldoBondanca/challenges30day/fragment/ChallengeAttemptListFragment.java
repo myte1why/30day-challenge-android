@@ -1,6 +1,7 @@
 package info.nivaldoBondanca.challenges30day.fragment;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -8,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.ContentLoadingProgressBar;
 import android.view.*;
 import android.widget.AbsListView;
@@ -27,10 +29,10 @@ import info.nivaldoBondanca.challenges30day.content.data.ChallengeAttemptDay;
  * Large screen devices (such as tablets) are supported by replacing the ListView
  * with a GridView.
  * <p/>
- * Activities containing this fragment MUST implement the {@link info.nivaldoBondanca.challenges30day.fragment.ChallengeAdapterListFragment.OnChallengeAttemptListInteractionListener}
+ * Activities containing this fragment MUST implement the {@link ChallengeAttemptListFragment.OnChallengeAttemptListInteractionListener}
  * interface.
  */
-public class ChallengeAdapterListFragment extends Fragment
+public class ChallengeAttemptListFragment extends Fragment
         implements AbsListView.OnItemClickListener,
                    AbsListView.OnItemLongClickListener,
                    LoaderManager.LoaderCallbacks<Cursor> {
@@ -40,13 +42,13 @@ public class ChallengeAdapterListFragment extends Fragment
     // Arguments
     private static final String ARG_CHALLENGE_ID = "arg.CHALLENGE_ID";
 
-    public static ChallengeAdapterListFragment newInstance(long challengeId) {
+    public static ChallengeAttemptListFragment newInstance(long challengeId) {
         // Prepare the arguments
         Bundle args = new Bundle();
         args.putLong(ARG_CHALLENGE_ID, challengeId);
 
         // Create the fragment
-        ChallengeAdapterListFragment fragment = new ChallengeAdapterListFragment();
+        ChallengeAttemptListFragment fragment = new ChallengeAttemptListFragment();
         fragment.setArguments(args);
 
         return fragment;
@@ -54,7 +56,7 @@ public class ChallengeAdapterListFragment extends Fragment
 
     private OnChallengeAttemptListInteractionListener mListener;
 
-    private AbsListView               mListView;
+    private ViewPager                 mViewPager;
     private ChallengeAttemptAdapter   mAdapter;
     private ContentLoadingProgressBar mLoadingView;
 
@@ -76,13 +78,20 @@ public class ChallengeAdapterListFragment extends Fragment
         View view = inflater.inflate(R.layout.fragment_challenge_attempt_list, container, false);
 
         // Set the adapter
-        mListView = (AbsListView) view.findViewById(android.R.id.list);
-        mListView.setAdapter(mAdapter);
+        mViewPager = (ViewPager) view.findViewById(android.R.id.list);
+        mViewPager.setAdapter(mAdapter);
+        mViewPager.setPageTransformer(false, new ViewPager.PageTransformer() {
+            @Override
+            public void transformPage(View page, float position) {
+                // Fades out the page
+                page.setAlpha((float) Math.cos(position * Math.PI / 2));
+            }
+        });
 
         // TODO Set click listeners
-        mListView.setOnItemClickListener(this);
-        mListView.setOnItemLongClickListener(this);
-        registerForContextMenu(mListView);
+//        mViewPager.setOnItemClickListener(this);
+//        mViewPager.setOnItemLongClickListener(this);
+        registerForContextMenu(mViewPager);
 
         return view;
     }
@@ -114,10 +123,10 @@ public class ChallengeAdapterListFragment extends Fragment
         }
         catch (ClassCastException e) {
             // TODO
-//            throw new ClassCastException(
-//                    activity.toString()
-//                            + " must implement OnChallengeListInteractionListener"
-//            );
+            //            throw new ClassCastException(
+            //                    activity.toString()
+            //                            + " must implement OnChallengeListInteractionListener"
+            //            );
         }
     }
 
@@ -146,7 +155,11 @@ public class ChallengeAdapterListFragment extends Fragment
             case R.id.action_challenge_delete:
                 // TODO show undo-able toast or confirmation dialog
                 getActivity().getContentResolver()
-                             .delete(ChallengeAttempt.getContentUri(challenge.challengeID, challenge.attemptNumber), null, null);
+                             .delete(
+                                     ChallengeAttempt.getContentUri(challenge.challengeID, challenge.attemptNumber),
+                                     null,
+                                     null
+                                    );
                 Toast.makeText(getActivity(), "Deleted!", Toast.LENGTH_SHORT).show();
                 return true;
         }
@@ -167,13 +180,13 @@ public class ChallengeAdapterListFragment extends Fragment
         if (null != mListener) {
             // Notify the active callbacks interface (the activity, if the
             // fragment is attached to one) that an item has been selected.
-//            mListener.onChallengeClick(mListView, position, id); TODO
+//            mListener.onChallengeClick(mViewPager, position, id); TODO
         }
     }
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
         return null != mListener;
-//                && mListener.onChallengeLongClick(mListView, position, id); TODO
+//                && mListener.onChallengeLongClick(mViewPager, position, id); TODO
     }
 
 
@@ -249,7 +262,13 @@ public class ChallengeAdapterListFragment extends Fragment
     }
 
     private void newChallengeAttempt() {
+        long challengeId = getArguments().getLong(ARG_CHALLENGE_ID);
+        long attemptNumber = ((ChallengeAttemptInfo) mAdapter.getItem(0)).attemptNumber + 1;
         // TODO
+        ContentValues values = new ContentValues();
+        values.put(ChallengeAttempt.Columns.CHALLENGE_ID, challengeId);
+        values.put(ChallengeAttempt.Columns.NUMBER, attemptNumber);
+        getActivity().getContentResolver().insert(ChallengeAttempt.getContentUri(challengeId), values);
     }
 
 

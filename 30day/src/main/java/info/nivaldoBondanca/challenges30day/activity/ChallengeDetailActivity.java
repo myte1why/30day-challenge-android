@@ -7,7 +7,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import info.nivaldoBondanca.challenges30day.R;
-import info.nivaldoBondanca.challenges30day.fragment.ChallengeAdapterListFragment;
+import info.nivaldoBondanca.challenges30day.fragment.ChallengeAttemptListFragment;
 
 
 public class ChallengeDetailActivity extends ActionBarActivity {
@@ -34,7 +34,7 @@ public class ChallengeDetailActivity extends ActionBarActivity {
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, ChallengeAdapterListFragment.newInstance(challengeId))
+                    .add(R.id.container, ChallengeAttemptListFragment.newInstance(challengeId))
                     .commit();
         }
     }

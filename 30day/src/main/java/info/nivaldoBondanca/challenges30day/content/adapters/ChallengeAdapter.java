@@ -65,11 +65,7 @@ public class ChallengeAdapter extends BaseAdapter {
     @Override
     public Object getItem(int position) {
         mCursor.moveToPosition(position);
-        return new ChallengeInfo(
-                mCursor.getLong(mIndexChallengeID),
-                mCursor.getLong(mIndexAttemptNumber),
-                mCursor.getLong(mIndexDayNumber)
-        );
+        return new ChallengeInfo(mCursor.getLong(mIndexChallengeID));
     }
 
     @Override

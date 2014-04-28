@@ -6,12 +6,8 @@ package info.nivaldoBondanca.challenges30day.content.adapters.item;
  */
 public class ChallengeInfo {
     public final long challengeID;
-    public final long attemptNumber;
-    public final long dayNumber;
 
-    public ChallengeInfo(long challengeID, long attemptNumber, long dayNumber) {
+    public ChallengeInfo(long challengeID) {
         this.challengeID = challengeID;
-        this.attemptNumber = attemptNumber;
-        this.dayNumber = dayNumber;
     }
 }

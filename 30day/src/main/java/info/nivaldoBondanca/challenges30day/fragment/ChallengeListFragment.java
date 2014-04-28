@@ -213,9 +213,8 @@ public class ChallengeListFragment extends Fragment
         switch (ListType.values()[id]) {
             case COMPLETE:
                 projection = new String[] {
-                        ChallengeAttemptDay.Columns.FULL_DAY_NUMBER,
+                        Challenge.Columns.FULL_ID+" AS "+ChallengeAttemptDay.Columns.CHALLENGE_ID,
                         ChallengeAttemptDay.Columns.FULL_ATTEMPT_NUMBER,
-                        ChallengeAttemptDay.Columns.FULL_CHALLENGE_ID,
                         Challenge.Columns.FULL_NAME,
                         "date("+ChallengeAttempt.Columns.FULL_FIRST_DAY+",'+30 days') AS "+ChallengeAttempt.EVENT_DAY,
                 };
@@ -233,9 +232,9 @@ public class ChallengeListFragment extends Fragment
                 break;
             case ALL:
                 projection = new String[] {
-                        Challenge.Columns.FULL_ID+" AS "+ChallengeAttemptDay.Columns.DAY_NUMBER,
+                        Challenge.Columns.FULL_ID+" AS "+ChallengeAttemptDay.Columns.CHALLENGE_ID,
                         ChallengeAttemptDay.Columns.FULL_ATTEMPT_NUMBER,
-                        ChallengeAttemptDay.Columns.FULL_CHALLENGE_ID,
+                        ChallengeAttemptDay.Columns.FULL_DAY_NUMBER,
                         Challenge.Columns.FULL_NAME,
                         ChallengeAttemptDay.Columns.FULL_STATUS
                 };

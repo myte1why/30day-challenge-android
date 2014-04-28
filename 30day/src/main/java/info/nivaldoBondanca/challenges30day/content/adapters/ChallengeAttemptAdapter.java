@@ -4,11 +4,12 @@ import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.support.v4.view.PagerAdapter;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.GridLayout;
 import android.widget.TextView;
 import info.nivaldoBondanca.challenges30day.R;
@@ -21,7 +22,7 @@ import info.nivaldoBondanca.challenges30day.content.data.ChallengeStatus;
  * Created by Nivaldo
  * on 27/04/2014
  */
-public class ChallengeAttemptAdapter extends BaseAdapter {
+public class ChallengeAttemptAdapter extends PagerAdapter {
 
     private Context        mContext;
     private Cursor         mCursor;
@@ -45,26 +46,11 @@ public class ChallengeAttemptAdapter extends BaseAdapter {
     }
 
     @Override
-    public Object getItem(int position) {
-        mCursor.moveToPosition(position);
-        return new ChallengeAttemptInfo(
-                mCursor.getLong(mIndexChallengeID),
-                mCursor.getLong(mIndexAttemptNumber)
-        );
-    }
-    @Override
-    public long getItemId(int position) {
-        mCursor.moveToPosition(position);
-        return mCursor.getLong(mIndexAttemptNumber);
-    }
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        // Check if the view is a recycled one
-        // If not, instantiate it
-        if (convertView == null) {
-            // Inflate the new view
-            convertView = mLayoutInflater.inflate(R.layout.view_challenge_attempt_list_item, parent, false);
-        }
+    public Object instantiateItem(ViewGroup container, int position) {
+        // Inflate the new view
+        View view = mLayoutInflater.inflate(R.layout.view_challenge_attempt_list_item, container, false);
+        // Work around to make the View Pager vertical
+        view.setRotation(-90);
 
         // Move the cursor
         Cursor c = mCursor;
@@ -76,35 +62,39 @@ public class ChallengeAttemptAdapter extends BaseAdapter {
 
         // Fill the grid!
         // TODO Implement the final version (this is only a test)
-        GridLayout gridLayout = (GridLayout) convertView.findViewById(R.id.challengeAttempt_dayGrid);
+        GridLayout gridLayout = (GridLayout) view.findViewById(R.id.challengeAttempt_dayGrid);
         int childCount = gridLayout.getChildCount();
         if (childCount == 0) {
-            GridLayout.LayoutParams params = new GridLayout.LayoutParams();
-            int padding = mContext.getResources().getDimensionPixelSize(R.dimen.default_text_padding);
+            int padding = mContext.getResources().getDimensionPixelSize(R.dimen.default_text_padding) / 8;
             for (int i = 0; i < 30; i++) {
                 // Prepare the View
                 TextView v = new TextView(mContext);
                 v.setText(Integer.toString(i+1));
-                v.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
+                v.setTextSize(TypedValue.COMPLEX_UNIT_SP, 26);
                 v.setTypeface(null, Typeface.BOLD);
                 v.setPadding(padding, padding, padding, padding);
+                v.setGravity(Gravity.CENTER);
 
                 // And its positioning in the grid
                 int elementsByRow = 5;
-                params.rowSpec    = GridLayout.spec(i / elementsByRow);
-                params.columnSpec = GridLayout.spec(i % elementsByRow);
+                GridLayout.LayoutParams params = new GridLayout.LayoutParams();
+                params.rowSpec    = GridLayout.spec(i / elementsByRow, 1);
+                params.columnSpec = GridLayout.spec(i % elementsByRow, 1);
 
                 gridLayout.addView(v, params);
             }
+
+            // Update the child count
+            childCount = gridLayout.getChildCount();
         }
 
         for (int i = 0; i < childCount; i++) {
             View v = gridLayout.getChildAt(i);
-            if (i < currentDay-1) {
+            if (currentDayStatus == ChallengeStatus.COMPLETED.ordinal() || i+1 < currentDay) {
                 v.setBackgroundResource(R.drawable.ic_check);
                 v.setAlpha(1f - (currentDay - i)/31f);
             }
-            else if (currentDayStatus == ChallengeStatus.ON_GOING.ordinal() && i == currentDay-1) {
+            else if (currentDayStatus == ChallengeStatus.ON_GOING.ordinal() && i+1 == currentDay) {
                 v.setBackgroundColor(Color.parseColor("#7700CC22")); // TODO
                 v.setAlpha(1);
             }
@@ -114,8 +104,27 @@ public class ChallengeAttemptAdapter extends BaseAdapter {
             }
         }
 
+        container.addView(view);
+        return view;
+    }
 
-        return convertView;
+    @Override
+    public void destroyItem(ViewGroup container, int position, Object object) {
+        GridLayout gridLayout = (GridLayout) container.findViewById(R.id.challengeAttempt_dayGrid);
+        gridLayout.removeView((View) object);
+    }
+
+    @Override
+    public boolean isViewFromObject(View view, Object object) {
+        return view == object;
+    }
+
+    public Object getItem(int position) {
+        mCursor.moveToPosition(position);
+        return new ChallengeAttemptInfo(
+                mCursor.getLong(mIndexChallengeID),
+                mCursor.getLong(mIndexAttemptNumber)
+        );
     }
 
     /**
@@ -152,5 +161,9 @@ public class ChallengeAttemptAdapter extends BaseAdapter {
 
         notifyDataSetChanged();
         return oldCursor;
+    }
+
+    public boolean isEmpty() {
+        return getCount() == 0;
     }
 }

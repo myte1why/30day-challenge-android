@@ -53,6 +53,7 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
             while (line != null) {
                 line = line.trim();
                 if (line.startsWith("--")) {
+                    // Skip comments
                     line = reader.readLine();
                     continue;
                 }
