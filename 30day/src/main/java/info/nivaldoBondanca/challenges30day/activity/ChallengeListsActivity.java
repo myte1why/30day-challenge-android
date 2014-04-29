@@ -50,6 +50,7 @@ public class ChallengeListsActivity extends ActionBarActivity
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.pager);
+        mViewPager.setOffscreenPageLimit(0); // TODO decide whether this is a good idea
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
         // When swiping between different sections, select the corresponding

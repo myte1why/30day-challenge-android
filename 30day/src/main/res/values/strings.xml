@@ -27,6 +27,7 @@
 
     <!-- Messages -->
     <string name="message_challenge_completed">Completed on %s</string>
+    <string name="message_challengeAttempt_firstDay">Started on %s</string>
 
     <!-- Hint -->
     <string name="hint_challenge_name">Challenge name</string>
@@ -34,9 +35,11 @@
     <string name="hint_name">Name</string>
 
     <!-- Empty -->
+    <string name="empty_challengeAttemptList">No challenges attempts yet</string>
     <string name="empty_challengeList_all">Here your challenges will appear</string>
     <string name="empty_challengeList_complete">All your completed challenges will appear here</string>
     <string name="empty_challengeList_onGoing">Your current challenges will appear here</string>
+    <string name="emptyAction_challengeAttemptList">New attempt</string>
     <string name="emptyAction_challengeList_all">New challenge</string>
     <string name="emptyAction_challengeList_onGoing">New challenge attempt</string>
 

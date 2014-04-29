@@ -32,7 +32,7 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String sql = null;
+        String sql;
         InputStream inputStream;
         try {
             // Get the input
@@ -51,7 +51,6 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
             StringBuilder buffer = new StringBuilder();
             String line = reader.readLine();
             while (line != null) {
-                line = line.trim();
                 if (line.startsWith("--")) {
                     // Skip comments
                     line = reader.readLine();

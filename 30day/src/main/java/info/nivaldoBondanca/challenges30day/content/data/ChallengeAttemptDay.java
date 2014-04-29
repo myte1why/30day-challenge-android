@@ -23,6 +23,13 @@ public class ChallengeAttemptDay {
         public static final String FULL_STATUS         = TABLE_NAME+"."+STATUS;
         public static final String FULL_NOTE           = TABLE_NAME+"."+NOTE;
     }
+    /**
+     *  Support variable to serve as a label to resulting query in the column
+     *  that contains the day of importance.
+     *  For example, currentDay will mean the day the challenge was completed in
+     *  the case of a list of completed
+     */
+    public static final String CURRENT_DAY = "currentDay";
 
     public static final String PATH = "day";
 

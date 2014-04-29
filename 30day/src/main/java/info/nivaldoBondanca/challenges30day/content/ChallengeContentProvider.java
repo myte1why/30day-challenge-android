@@ -135,13 +135,14 @@ public class ChallengeContentProvider extends ContentProvider {
     @Override
     public Uri insert(Uri uri, ContentValues values) {
         // TODO: Implement this to handle requests to insert a new row.
-        long newId = 0;
+        long newId;
         switch (mUriMatcher.match(uri)) {
             case URI_CHALLENGE:
                 newId = mDatabase.insert(Challenge.TABLE_NAME, null, values);
                 break;
+
             case URI_ATTEMPT:
-            case URI_DAY:
+                newId = mDatabase.insert(ChallengeAttempt.TABLE_NAME, null, values);
                 break;
 
             default:

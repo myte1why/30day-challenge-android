@@ -2,7 +2,6 @@ package info.nivaldoBondanca.challenges30day.content.data;
 
 import android.content.ContentUris;
 import android.net.Uri;
-
 import info.nivaldoBondanca.challenges30day.content.ChallengeContentProvider;
 
 /**

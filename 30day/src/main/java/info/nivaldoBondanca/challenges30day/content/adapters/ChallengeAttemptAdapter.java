@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.support.v4.view.PagerAdapter;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -12,10 +13,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import info.nivaldoBondanca.challenges30day.R;
 import info.nivaldoBondanca.challenges30day.content.adapters.item.ChallengeAttemptInfo;
 import info.nivaldoBondanca.challenges30day.content.data.ChallengeAttempt;
+import info.nivaldoBondanca.challenges30day.content.data.ChallengeAttemptDay;
 import info.nivaldoBondanca.challenges30day.content.data.ChallengeStatus;
+import info.nivaldoBondanca.challenges30day.utils.DateTimeUtils;
+
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
+
+import static info.nivaldoBondanca.challenges30day.ThirdyDayChallenges.LOG_TAG;
 
 
 /**
@@ -30,9 +41,10 @@ public class ChallengeAttemptAdapter extends PagerAdapter {
 
     private int mIndexChallengeID;
     private int mIndexAttemptNumber;
-    private int mIndexEventDay;
+    private int mIndexDay;
     private int mIndexStatus;
     private int mIndexDayStatus;
+    private int mIndexFirstDay;
 
 
     public ChallengeAttemptAdapter(Context context) {
@@ -57,8 +69,21 @@ public class ChallengeAttemptAdapter extends PagerAdapter {
         c.moveToPosition(position);
 
         // Bind content to the View
-        int currentDay = c.getInt(mIndexEventDay);
+        int currentDay = c.getInt(mIndexDay);
         int currentDayStatus = c.getInt(mIndexDayStatus);
+
+        try {
+            // Completion date
+            DateFormat timeFormat = android.text.format.DateFormat.getLongDateFormat(mContext);
+            SimpleDateFormat dateFormat = new SimpleDateFormat(DateTimeUtils.DATE_FORMAT, Locale.getDefault());
+            String date = timeFormat.format(dateFormat.parse(c.getString(mIndexFirstDay)));
+            ((TextView) view.findViewById(R.id.challengeAttempt_firstDay))
+                    .setText(mContext.getString(R.string.message_challengeAttempt_firstDay, date));
+        }
+        catch (ParseException e) {
+            Toast.makeText(mContext, R.string.error_dateTimeFormat, Toast.LENGTH_LONG).show();
+            Log.w(LOG_TAG, mContext.getText(R.string.error_dateTimeFormat).toString(), e);
+        }
 
         // Fill the grid!
         // TODO Implement the final version (this is only a test)
@@ -92,7 +117,7 @@ public class ChallengeAttemptAdapter extends PagerAdapter {
             View v = gridLayout.getChildAt(i);
             if (currentDayStatus == ChallengeStatus.COMPLETED.ordinal() || i+1 < currentDay) {
                 v.setBackgroundResource(R.drawable.ic_check);
-                v.setAlpha(1f - (currentDay - i)/31f);
+                v.setAlpha(1);
             }
             else if (currentDayStatus == ChallengeStatus.ON_GOING.ordinal() && i+1 == currentDay) {
                 v.setBackgroundColor(Color.parseColor("#7700CC22")); // TODO
@@ -100,7 +125,7 @@ public class ChallengeAttemptAdapter extends PagerAdapter {
             }
             else {
                 v.setBackgroundColor(Color.TRANSPARENT);
-                v.setAlpha(1);
+                v.setAlpha(.5f);
             }
         }
 
@@ -154,9 +179,10 @@ public class ChallengeAttemptAdapter extends PagerAdapter {
         if (mCursor != null) {
             mIndexChallengeID = mCursor.getColumnIndex(ChallengeAttempt.Columns.CHALLENGE_ID);
             mIndexAttemptNumber = mCursor.getColumnIndex(ChallengeAttempt.Columns.NUMBER);
-            mIndexEventDay = mCursor.getColumnIndex(ChallengeAttempt.EVENT_DAY);
             mIndexStatus = mCursor.getColumnIndex(ChallengeAttempt.Columns.STATUS);
-            mIndexDayStatus = mCursor.getColumnIndex(ChallengeAttempt.Columns.STATUS);
+            mIndexFirstDay = mCursor.getColumnIndex(ChallengeAttempt.Columns.FIRST_DAY);
+            mIndexDay = mCursor.getColumnIndex(ChallengeAttemptDay.CURRENT_DAY);
+            mIndexDayStatus = mCursor.getColumnIndex(ChallengeAttempt.EVENT_DAY);
         }
 
         notifyDataSetChanged();

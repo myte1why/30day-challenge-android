@@ -14,9 +14,9 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.TextView;
 import android.widget.Toast;
+import info.nivaldoBondanca.challenges30day.R;
 import info.nivaldoBondanca.challenges30day.content.adapters.ChallengeAdapter;
 import info.nivaldoBondanca.challenges30day.content.adapters.item.ChallengeInfo;
-import info.nivaldoBondanca.challenges30day.R;
 import info.nivaldoBondanca.challenges30day.content.data.Challenge;
 import info.nivaldoBondanca.challenges30day.content.data.ChallengeAttempt;
 import info.nivaldoBondanca.challenges30day.content.data.ChallengeAttemptDay;
@@ -209,7 +209,6 @@ public class ChallengeListFragment extends Fragment
         String[] projection = null;
         String selection = null;
 
-        // TODO review the necessity of ChallengeAttemptDay.Columns.FULL_DAY_NUMBER
         switch (ListType.values()[id]) {
             case COMPLETE:
                 projection = new String[] {
@@ -257,6 +256,9 @@ public class ChallengeListFragment extends Fragment
         View v = getView();
         if (mAdapter.isEmpty() && v != null) {
             v.findViewById(android.R.id.empty).setVisibility(View.VISIBLE);
+        }
+        else if (v != null) {
+            v.findViewById(android.R.id.empty).setVisibility(View.GONE);
         }
     }
     @Override

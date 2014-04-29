@@ -12,7 +12,6 @@ import android.support.v4.content.Loader;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.ContentLoadingProgressBar;
 import android.view.*;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,9 +32,7 @@ import info.nivaldoBondanca.challenges30day.content.data.ChallengeAttemptDay;
  * interface.
  */
 public class ChallengeAttemptListFragment extends Fragment
-        implements AbsListView.OnItemClickListener,
-                   AbsListView.OnItemLongClickListener,
-                   LoaderManager.LoaderCallbacks<Cursor> {
+        implements LoaderManager.LoaderCallbacks<Cursor> {
 
     public static final int LOAD_CHALLENGE_ATTEMPT = 0;
 
@@ -100,7 +97,7 @@ public class ChallengeAttemptListFragment extends Fragment
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         // Prepare the list empty state
-        setEmptyView();
+        setupEmptyView();
 
         // Display loading status
         mLoadingView = (ContentLoadingProgressBar) getView().findViewById(android.R.id.progress);
@@ -122,11 +119,7 @@ public class ChallengeAttemptListFragment extends Fragment
             mListener = (OnChallengeAttemptListInteractionListener) activity;
         }
         catch (ClassCastException e) {
-            // TODO
-            //            throw new ClassCastException(
-            //                    activity.toString()
-            //                            + " must implement OnChallengeListInteractionListener"
-            //            );
+            throw new ClassCastException(activity.toString() + " must implement OnChallengeListInteractionListener");
         }
     }
 
@@ -148,18 +141,10 @@ public class ChallengeAttemptListFragment extends Fragment
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         ChallengeAttemptInfo challenge = (ChallengeAttemptInfo) mAdapter.getItem(info.position);
         switch (item.getItemId()) {
-            case R.id.action_challenge_edit:
-                editChallengeAttempt(challenge.attemptNumber);
-                return true;
-
             case R.id.action_challenge_delete:
                 // TODO show undo-able toast or confirmation dialog
                 getActivity().getContentResolver()
-                             .delete(
-                                     ChallengeAttempt.getContentUri(challenge.challengeID, challenge.attemptNumber),
-                                     null,
-                                     null
-                                    );
+                             .delete(ChallengeAttempt.getContentUri(challenge.challengeID, challenge.attemptNumber), null, null);
                 Toast.makeText(getActivity(), "Deleted!", Toast.LENGTH_SHORT).show();
                 return true;
         }
@@ -176,34 +161,18 @@ public class ChallengeAttemptListFragment extends Fragment
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if (null != mListener) {
-            // Notify the active callbacks interface (the activity, if the
-            // fragment is attached to one) that an item has been selected.
-//            mListener.onChallengeClick(mViewPager, position, id); TODO
-        }
-    }
-    @Override
-    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-        return null != mListener;
-//                && mListener.onChallengeLongClick(mViewPager, position, id); TODO
-    }
-
-
-    @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         // Hide the list, as new content is loaded
         setListShown(false);
 
         final Uri uri = ChallengeAttempt.getContentUri(getArguments().getLong(ARG_CHALLENGE_ID));
         final String[] projection = new String[]{
-                ChallengeAttemptDay.Columns.FULL_CHALLENGE_ID,
-                ChallengeAttemptDay.Columns.FULL_ATTEMPT_NUMBER,
-                ChallengeAttemptDay.Columns.FULL_DAY_NUMBER,
-                ChallengeAttemptDay.Columns.FULL_DAY_NUMBER + " AS " + ChallengeAttempt.EVENT_DAY,
+                ChallengeAttempt.Columns.FULL_CHALLENGE_ID,
+                ChallengeAttempt.Columns.FULL_NUMBER,
+                ChallengeAttemptDay.Columns.FULL_DAY_NUMBER + " AS " + ChallengeAttemptDay.CURRENT_DAY,
                 ChallengeAttempt.Columns.FULL_FIRST_DAY,
-                ChallengeAttempt.Columns.FULL_STATUS,
-                ChallengeAttemptDay.Columns.FULL_STATUS
+                ChallengeAttempt.Columns.FULL_STATUS ,
+                ChallengeAttemptDay.Columns.FULL_STATUS + " AS " + ChallengeAttempt.EVENT_DAY
         };
 
         View v = getView();
@@ -223,48 +192,37 @@ public class ChallengeAttemptListFragment extends Fragment
         if (mAdapter.isEmpty() && v != null) {
             v.findViewById(android.R.id.empty).setVisibility(View.VISIBLE);
         }
+        else if (v != null) {
+            v.findViewById(android.R.id.empty).setVisibility(View.GONE);
+        }
     }
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         mAdapter.swapCursor(null);
     }
 
-    /**
-     * The default content for this Fragment has a TextView that is shown when
-     * the list is empty. If you would like to change the text, call this method
-     * to supply the text it should use.
-     */
-    public void setEmptyView() {
-        CharSequence emptyText = "No challenges attempts yet";
-        CharSequence actionText = "New Attempt";
-        int actionImage = R.drawable.ic_action_new_content;
-        View.OnClickListener l = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                newChallengeAttempt();
-            }
-        };
-
+    public void setupEmptyView() {
         View emptyView = getView().findViewById(android.R.id.empty);
 
         TextView text = (TextView) emptyView.findViewById(R.id.empty_text);
-        text.setText(emptyText);
+        text.setText(R.string.empty_challengeAttemptList);
 
         text = (TextView) emptyView.findViewById(R.id.empty_action);
-        text.setText(actionText);
-        text.setCompoundDrawablesWithIntrinsicBounds(actionImage, 0, 0, 0);
-        text.setOnClickListener(l);
-    }
-
-    private void editChallengeAttempt(long attemptNumber) {
-        // TODO
-//        EditChallengeAttemptDialogFragment.newInstance(challengeId).show(getFragmentManager(), null);
+        text.setText(R.string.emptyAction_challengeAttemptList);
+        text.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_action_new_content, 0, 0, 0);
+        text.setOnClickListener(
+            new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    newChallengeAttempt();
+                }
+            });
     }
 
     private void newChallengeAttempt() {
         long challengeId = getArguments().getLong(ARG_CHALLENGE_ID);
-        long attemptNumber = ((ChallengeAttemptInfo) mAdapter.getItem(0)).attemptNumber + 1;
-        // TODO
+        long attemptNumber = mAdapter.isEmpty() ? 1 : ((ChallengeAttemptInfo) mAdapter.getItem(0)).attemptNumber + 1;
+
         ContentValues values = new ContentValues();
         values.put(ChallengeAttempt.Columns.CHALLENGE_ID, challengeId);
         values.put(ChallengeAttempt.Columns.NUMBER, attemptNumber);

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
@@ -12,11 +13,22 @@
         android:orientation="vertical"
         android:background="@drawable/card">
 
+        <TextView
+            android:id="@+id/challengeAttempt_firstDay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-condensed"
+            android:text="Started on July, 30th 2014"
+            android:textSize="18sp"
+            android:padding="@dimen/default_text_padding"
+            tools:ignore="UnusedAttribute"/>
+
         <GridLayout
             android:id="@+id/challengeAttempt_dayGrid"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center"
+            android:padding="8dp"/>
     </LinearLayout>
 
     <View
