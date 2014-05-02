@@ -2,16 +2,11 @@ package info.nivaldoBondanca.challenges30day.content.adapters;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.Color;
-import android.graphics.Typeface;
 import android.support.v4.view.PagerAdapter;
 import android.util.Log;
-import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.GridLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import info.nivaldoBondanca.challenges30day.R;
@@ -20,6 +15,7 @@ import info.nivaldoBondanca.challenges30day.content.data.ChallengeAttempt;
 import info.nivaldoBondanca.challenges30day.content.data.ChallengeAttemptDay;
 import info.nivaldoBondanca.challenges30day.content.data.ChallengeStatus;
 import info.nivaldoBondanca.challenges30day.utils.DateTimeUtils;
+import info.nivaldoBondanca.challenges30day.view.QuickChallengeAttemptDisplayView;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -87,47 +83,9 @@ public class ChallengeAttemptAdapter extends PagerAdapter {
 
         // Fill the grid!
         // TODO Implement the final version (this is only a test)
-        GridLayout gridLayout = (GridLayout) view.findViewById(R.id.challengeAttempt_dayGrid);
-        int childCount = gridLayout.getChildCount();
-        if (childCount == 0) {
-            int padding = mContext.getResources().getDimensionPixelSize(R.dimen.default_text_padding) / 8;
-            for (int i = 0; i < 30; i++) {
-                // Prepare the View
-                TextView v = new TextView(mContext);
-                v.setText(Integer.toString(i+1));
-                v.setTextSize(TypedValue.COMPLEX_UNIT_SP, 26);
-                v.setTypeface(null, Typeface.BOLD);
-                v.setPadding(padding, padding, padding, padding);
-                v.setGravity(Gravity.CENTER);
-
-                // And its positioning in the grid
-                int elementsByRow = 5;
-                GridLayout.LayoutParams params = new GridLayout.LayoutParams();
-                params.rowSpec    = GridLayout.spec(i / elementsByRow, 1);
-                params.columnSpec = GridLayout.spec(i % elementsByRow, 1);
-
-                gridLayout.addView(v, params);
-            }
-
-            // Update the child count
-            childCount = gridLayout.getChildCount();
-        }
-
-        for (int i = 0; i < childCount; i++) {
-            View v = gridLayout.getChildAt(i);
-            if (currentDayStatus == ChallengeStatus.COMPLETED.ordinal() || i+1 < currentDay) {
-                v.setBackgroundResource(R.drawable.ic_check);
-                v.setAlpha(1);
-            }
-            else if (currentDayStatus == ChallengeStatus.ON_GOING.ordinal() && i+1 == currentDay) {
-                v.setBackgroundColor(Color.parseColor("#7700CC22")); // TODO
-                v.setAlpha(1);
-            }
-            else {
-                v.setBackgroundColor(Color.TRANSPARENT);
-                v.setAlpha(.5f);
-            }
-        }
+        QuickChallengeAttemptDisplayView quickView = (QuickChallengeAttemptDisplayView) view.findViewById(R.id.challengeAttempt_dayGrid);
+        quickView.setCompleteDays(currentDay-1);
+        quickView.setCurrentDayComplete(currentDayStatus == ChallengeStatus.COMPLETED.ordinal());
 
         container.addView(view);
         return view;
@@ -135,8 +93,7 @@ public class ChallengeAttemptAdapter extends PagerAdapter {
 
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
-        GridLayout gridLayout = (GridLayout) container.findViewById(R.id.challengeAttempt_dayGrid);
-        gridLayout.removeView((View) object);
+        container.removeView((View) object);
     }
 
     @Override

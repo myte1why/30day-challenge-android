@@ -1,0 +1,22 @@
+<resources>
+
+    <declare-styleable name="QuickChallengeAttemptDisplayView">
+        <attr name="dimensionGridThickness" format="dimension"/>
+        <attr name="dimensionSquare" format="dimension"/>
+
+        <attr name="drawableComplete" format="color|reference"/>
+
+        <attr name="colorComplete" format="color"/>
+        <attr name="colorCurrent" format="color"/>
+        <attr name="colorFuture" format="color"/>
+
+        <attr name="colorGrid" format="color"/>
+
+        <attr name="completeDays" format="integer"/>
+        <attr name="currentDayComplete" format="boolean"/>
+
+        <attr name="numberOfColumns" format="integer"/>
+        <attr name="numberOfRows" format="integer"/>
+    </declare-styleable>
+
+</resources>

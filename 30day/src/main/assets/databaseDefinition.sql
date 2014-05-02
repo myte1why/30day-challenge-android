@@ -27,7 +27,7 @@ CREATE TABLE `challengeAttemptDay` (
     challenge_id    INTEGER NOT NULL,
     attempt_id      INTEGER NOT NULL,
     status          INTEGER NOT NULL DEFAULT 0,
-    note            TEXT,
+    note            TEXT    DEFAULT '',
 
     PRIMARY KEY (_id, challenge_id, attempt_id),
 
@@ -88,7 +88,8 @@ INSERT INTO challenge VALUES (1, 'Challenge A', NULL, 1, '20:00:00', 15);
         INSERT INTO challengeAttemptDay VALUES (30, 1, 2, 2, NULL);
 
     INSERT INTO challengeAttempt VALUES (3, 1, DATE('now'), 1);
-        INSERT INTO challengeAttemptDay VALUES (1, 1, 3, 1, NULL);
+        INSERT INTO challengeAttemptDay VALUES (1, 1, 3, 2, NULL);
+        INSERT INTO challengeAttemptDay VALUES (2, 1, 3, 1, NULL);
 
 CREATE TRIGGER `firstDayCreator`
     AFTER INSERT ON `challengeAttempt`

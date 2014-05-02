@@ -67,7 +67,6 @@ public class ChallengeContentProvider extends ContentProvider {
 
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
-        // TODO: Implement this to handle query requests from clients.
         Cursor cursor = null;
 
         // Null check
@@ -119,6 +118,7 @@ public class ChallengeContentProvider extends ContentProvider {
             }
             case URI_DAY_ITEM:
             case URI_DAY:
+                // TODO Implement this
                 break;
 
             default:
@@ -134,7 +134,6 @@ public class ChallengeContentProvider extends ContentProvider {
 
     @Override
     public Uri insert(Uri uri, ContentValues values) {
-        // TODO: Implement this to handle requests to insert a new row.
         long newId;
         switch (mUriMatcher.match(uri)) {
             case URI_CHALLENGE:
@@ -158,21 +157,41 @@ public class ChallengeContentProvider extends ContentProvider {
 
     @Override
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
-        // TODO: Implement this to handle requests to update one or more rows.
-        int result = -1;
+        int result;
+        List<String> pathSegments = uri.getPathSegments();
         switch (mUriMatcher.match(uri)) {
             case URI_CHALLENGE_ITEM: {
-                long id = ContentUris.parseId(uri);
-                selection = Challenge.Columns.FULL_ID+"="+id;
+                selection = Challenge.Columns.FULL_ID+"= ?";
+                selectionArgs = new String[] { pathSegments.get(1) };
             }
             case URI_CHALLENGE:
                 result = mDatabase.update(Challenge.TABLE_NAME, values, selection, selectionArgs);
                 break;
 
-            case URI_ATTEMPT_ITEM:
+            case URI_ATTEMPT_ITEM: {
+                selection = ChallengeAttempt.Columns.FULL_NUMBER+"= ?" +
+                        " AND " + ChallengeAttempt.Columns.FULL_CHALLENGE_ID+"= ?";
+                selectionArgs = new String[] {
+                        pathSegments.get(3),
+                        pathSegments.get(1)
+                };
+            }
             case URI_ATTEMPT:
-            case URI_DAY_ITEM:
+                result = mDatabase.update(ChallengeAttempt.TABLE_NAME, values, selection, selectionArgs);
+                break;
+
+            case URI_DAY_ITEM: {
+                selection = ChallengeAttemptDay.Columns.FULL_DAY_NUMBER+"= ? " +
+                        " AND " + ChallengeAttemptDay.Columns.FULL_ATTEMPT_NUMBER + "= ? " +
+                        " AND " + ChallengeAttemptDay.Columns.FULL_CHALLENGE_ID + "= ?";
+                selectionArgs = new String[] {
+                        pathSegments.get(5),
+                        pathSegments.get(3),
+                        pathSegments.get(1)
+                };
+            }
             case URI_DAY:
+                result = mDatabase.update(ChallengeAttemptDay.TABLE_NAME, values, selection, selectionArgs);
                 break;
 
             default:
@@ -186,25 +205,25 @@ public class ChallengeContentProvider extends ContentProvider {
 
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
-        // TODO: Implement this to handle requests to delete one or more rows.
-        int result = -1;
+        int result;
         List<String> pathSegments = uri.getPathSegments();
         switch (mUriMatcher.match(uri)) {
             case URI_CHALLENGE_ITEM:
-                selection = Challenge.Columns.FULL_ID+"="+ContentUris.parseId(uri);
+                selection = Challenge.Columns.FULL_ID+"= ?";
+                selectionArgs = new String[] { pathSegments.get(1) };
             case URI_CHALLENGE:
                 result = mDatabase.delete(Challenge.TABLE_NAME, selection, selectionArgs);
                 break;
 
             case URI_ATTEMPT_ITEM:
-                selection = ChallengeAttempt.Columns.FULL_NUMBER + "=" + pathSegments.get(3) +
-                        " AND " + ChallengeAttempt.Columns.FULL_CHALLENGE_ID + "=" + pathSegments.get(1);
+                selection = ChallengeAttempt.Columns.FULL_NUMBER + "= ? " +
+                        " AND " + ChallengeAttempt.Columns.FULL_CHALLENGE_ID + "= ?";
+                selectionArgs = new String[] {
+                        pathSegments.get(3),
+                        pathSegments.get(1)
+                };
             case URI_ATTEMPT:
                 result = mDatabase.delete(ChallengeAttempt.TABLE_NAME, selection, selectionArgs);
-                break;
-
-            case URI_DAY_ITEM:
-            case URI_DAY:
                 break;
 
             default:

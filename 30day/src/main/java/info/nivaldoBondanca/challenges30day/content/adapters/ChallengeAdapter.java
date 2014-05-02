@@ -6,10 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.ViewAnimator;
+import android.widget.*;
 import info.nivaldoBondanca.challenges30day.R;
 import info.nivaldoBondanca.challenges30day.content.adapters.item.ChallengeInfo;
 import info.nivaldoBondanca.challenges30day.content.data.Challenge;
@@ -18,6 +15,7 @@ import info.nivaldoBondanca.challenges30day.content.data.ChallengeAttemptDay;
 import info.nivaldoBondanca.challenges30day.content.data.ChallengeStatus;
 import info.nivaldoBondanca.challenges30day.fragment.ChallengeListFragment;
 import info.nivaldoBondanca.challenges30day.utils.DateTimeUtils;
+import info.nivaldoBondanca.challenges30day.view.QuickChallengeAttemptDisplayView;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -45,8 +43,9 @@ public class ChallengeAdapter extends BaseAdapter {
     private int mIndexChallengeID;
     private int mIndexAttemptNumber;
     private int mIndexDayNumber;
+    private int mIndexDayEvent;
     private int mIndexChallengeName;
-    private int mIndexEventDay;
+    private int mIndexDayStatus;
     private int mIndexStatus;
 
 
@@ -99,36 +98,33 @@ public class ChallengeAdapter extends BaseAdapter {
         // Bind the view to the data
         ((TextView) convertView.findViewById(R.id.challenge_name)).setText(c.getString(mIndexChallengeName));
         ViewAnimator dynamicView = (ViewAnimator) convertView.findViewById(R.id.challenge_dynamicView);
-        switch (mType) {
-            case COMPLETE: {
-                dynamicView.setDisplayedChild(VIEW_COMPLETE);
-                try {
-                    // Completion date
-                    DateFormat timeFormat = android.text.format.DateFormat.getMediumDateFormat(mContext);
-                    SimpleDateFormat dateFormat = new SimpleDateFormat(DateTimeUtils.DATE_FORMAT, Locale.getDefault());
-                    String date = timeFormat.format(dateFormat.parse(c.getString(mIndexEventDay)));
-                    ((TextView) dynamicView.findViewById(R.id.challenge_completeText))
-                            .setText(mContext.getString(R.string.message_challenge_completed, date));
-                }
-                catch (ParseException e) {
-                    Toast.makeText(mContext, R.string.error_dateTimeFormat, Toast.LENGTH_LONG).show();
-                    Log.w(LOG_TAG, mContext.getText(R.string.error_dateTimeFormat).toString(), e);
-                }
-
-                break;
+        if (mType == ChallengeListFragment.ListType.COMPLETE
+                || (mType == ChallengeListFragment.ListType.ALL && c.getInt(mIndexStatus) == ChallengeStatus.COMPLETED.ordinal())) {
+            dynamicView.setDisplayedChild(VIEW_COMPLETE);
+            try {
+                // Completion date
+                DateFormat timeFormat = android.text.format.DateFormat.getMediumDateFormat(mContext);
+                SimpleDateFormat dateFormat = new SimpleDateFormat(DateTimeUtils.DATE_FORMAT, Locale.getDefault());
+                String date = timeFormat.format(dateFormat.parse(c.getString(mIndexDayEvent)));
+                ((TextView) dynamicView.findViewById(R.id.challenge_completeText))
+                        .setText(mContext.getString(R.string.message_challenge_completed, date));
             }
-
-
-            case ALL:
-                if (c.getInt(mIndexStatus) != ChallengeStatus.ON_GOING.ordinal()) {
-                    dynamicView.findViewById(R.id.challenge_newAttempt).setTag(c.getLong(mIndexChallengeID));
-                    dynamicView.setDisplayedChild(VIEW_FUTURE);
-                    break;
-                }
-            case ON_GOING:
-                dynamicView.setDisplayedChild(VIEW_ON_GOING);
-                // TODO - The SUPER view
-                break;
+            catch (ParseException e) {
+                Toast.makeText(mContext, R.string.error_dateTimeFormat, Toast.LENGTH_LONG).show();
+                Log.w(LOG_TAG, mContext.getText(R.string.error_dateTimeFormat).toString(), e);
+            }
+        }
+        else if (mType == ChallengeListFragment.ListType.ON_GOING
+                || (mType == ChallengeListFragment.ListType.ALL && c.getInt(mIndexStatus) == ChallengeStatus.ON_GOING.ordinal())) {
+            dynamicView.setDisplayedChild(VIEW_ON_GOING);
+            QuickChallengeAttemptDisplayView quickView =
+                    (QuickChallengeAttemptDisplayView) convertView.findViewById(R.id.challenge_quickView);
+            quickView.setCompleteDays(c.getInt(mIndexDayNumber) - 1);
+            quickView.setCurrentDayComplete(c.getInt(mIndexDayStatus) == ChallengeStatus.COMPLETED.ordinal()); // TODO do the real work here
+        }
+        else if (mType == ChallengeListFragment.ListType.ALL) {
+            dynamicView.setDisplayedChild(VIEW_FUTURE);
+            dynamicView.findViewById(R.id.challenge_newAttempt).setTag(c.getLong(mIndexChallengeID));
         }
 
 
@@ -163,8 +159,9 @@ public class ChallengeAdapter extends BaseAdapter {
             mIndexChallengeID = mCursor.getColumnIndex(ChallengeAttemptDay.Columns.CHALLENGE_ID);
             mIndexAttemptNumber = mCursor.getColumnIndex(ChallengeAttemptDay.Columns.ATTEMPT_NUMBER);
             mIndexDayNumber = mCursor.getColumnIndex(ChallengeAttemptDay.Columns.DAY_NUMBER);
+            mIndexDayEvent = mCursor.getColumnIndex(ChallengeAttempt.EVENT_DAY);
             mIndexChallengeName = mCursor.getColumnIndex(Challenge.Columns.NAME);
-            mIndexEventDay = mCursor.getColumnIndex(ChallengeAttempt.EVENT_DAY);
+            mIndexDayStatus = mCursor.getColumnIndex(ChallengeAttemptDay.CURRENT_DAY);
             mIndexStatus = mCursor.getColumnIndex(ChallengeAttempt.Columns.STATUS);
         }
 

@@ -215,7 +215,8 @@ public class ChallengeListFragment extends Fragment
                         Challenge.Columns.FULL_ID+" AS "+ChallengeAttemptDay.Columns.CHALLENGE_ID,
                         ChallengeAttemptDay.Columns.FULL_ATTEMPT_NUMBER,
                         Challenge.Columns.FULL_NAME,
-                        "date("+ChallengeAttempt.Columns.FULL_FIRST_DAY+",'+30 days') AS "+ChallengeAttempt.EVENT_DAY,
+                        ChallengeAttempt.Columns.FULL_STATUS,
+                        "date("+ChallengeAttempt.Columns.FULL_FIRST_DAY+",'+30 days') AS "+ChallengeAttempt.EVENT_DAY
                 };
                 selection = ChallengeAttempt.Columns.FULL_STATUS+"="+ChallengeStatus.COMPLETED.ordinal();
                 break;
@@ -225,7 +226,8 @@ public class ChallengeListFragment extends Fragment
                         ChallengeAttemptDay.Columns.FULL_ATTEMPT_NUMBER,
                         ChallengeAttemptDay.Columns.FULL_CHALLENGE_ID,
                         Challenge.Columns.FULL_NAME,
-                        ChallengeAttemptDay.Columns.FULL_STATUS
+                        ChallengeAttempt.Columns.FULL_STATUS,
+                        ChallengeAttemptDay.Columns.FULL_STATUS+" AS "+ChallengeAttemptDay.CURRENT_DAY
                 };
                 selection = ChallengeAttempt.Columns.FULL_STATUS+"="+ChallengeStatus.ON_GOING.ordinal();
                 break;
@@ -235,7 +237,9 @@ public class ChallengeListFragment extends Fragment
                         ChallengeAttemptDay.Columns.FULL_ATTEMPT_NUMBER,
                         ChallengeAttemptDay.Columns.FULL_DAY_NUMBER,
                         Challenge.Columns.FULL_NAME,
-                        ChallengeAttemptDay.Columns.FULL_STATUS
+                        ChallengeAttempt.Columns.FULL_STATUS,
+                        ChallengeAttemptDay.Columns.FULL_STATUS+" AS "+ChallengeAttemptDay.CURRENT_DAY,
+                        "date("+ChallengeAttempt.Columns.FULL_FIRST_DAY+",'+30 days') AS "+ChallengeAttempt.EVENT_DAY
                 };
                 break;
         }
